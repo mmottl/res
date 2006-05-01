@@ -1,0 +1,6 @@
+name="res"
+version="2.2.0"
+description="RES - resizable contiguous memory"
+requires=""
+archive(byte)="res.cma"
+archive(native)="res.cmxa"
