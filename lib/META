@@ -1,5 +1,5 @@
 name="res"
-version="2.2.0"
+version="2.2.4"
 description="RES - resizable contiguous memory"
 requires=""
 archive(byte)="res.cma"
