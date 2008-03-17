@@ -1,0 +1,3 @@
+OCamlMakeProjDefaults(stupid_ga.exe)
+
+InstantiateOCamlEnv()

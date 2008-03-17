@@ -1,0 +1,30 @@
+OCAML_LIBRARIES =
+OCAMLPACKS =
+
+LIB_MLNAMES = nopres_impl pres_impl weak_impl res
+
+# Taken from OCamlMakeLibPackage (without packing!)
+
+name = res
+
+MY_LIBDIR = $(OCamlMainLib $(name))
+
+mkdir(-p $(MY_LIBDIR))
+
+$(MY_LIBDIR):
+  true
+
+OCAML_CLIBS = $(name)_stubs
+
+$(OCamlAddLibDir $(name), $(name).cmx): $(name).cmx
+  rm(-f $@)
+  symlink($<, $@)
+
+$(OCamlAddLibDir $(name), $(name).o): $(name).o
+  rm(-f $@)
+  symlink($<, $@)
+
+OCamlMakeLibCommon($(name))
+OCamlLibraryInstall($(name), $(MY_LIBDIR), $(name), $(LIB_MLNAMES))
+
+InstantiateOCamlEnv()

@@ -1,0 +1,3 @@
+OCAML_LIBRARIES = res
+
+.SUBDIRS: buffer defstrat stupid_ga weak

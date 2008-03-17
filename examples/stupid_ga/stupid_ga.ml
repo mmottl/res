@@ -29,7 +29,7 @@ module Ga (Spec : GA_SPEC) = struct
     Printf.fprintf ch "%a -> (%s)" print_genes indiv.genes fitness
 
   let mutate_indiv indiv =
-    let mutate_gene i gene =
+    let mutate_gene i _gene =
       if Random.int 100 < mut_prob then
         Genes.set indiv.genes i
           (if Genes.get indiv.genes i then false else true) in
