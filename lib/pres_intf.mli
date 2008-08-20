@@ -338,4 +338,6 @@ module type T = sig
 
   val unsafe_swap : 'a t -> int -> int -> unit
   val unsafe_swap_in_last : 'a t -> int -> unit
+
+  val unsafe_expose_array : 'a t -> 'a array
 end

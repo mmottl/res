@@ -108,7 +108,7 @@ module Make (S : Strat.T) (Impl : Implementation) = struct
 
   let enforce_strategy ra =
     let real_len = real_length ra and len = length ra in
-    Strategy.shrink ra.strategy (resizer ra.vlix ra) real_len len
+    Strategy.shrink ra.strategy (fun x -> resizer ra.vlix ra x) real_len len
 
   let set_strategy ra strategy = ra.strategy <- strategy; enforce_strategy ra
   let put_strategy ra strategy = ra.strategy <- strategy
@@ -150,7 +150,7 @@ module Make (S : Strat.T) (Impl : Implementation) = struct
 
   let guarantee_ix ra ix =
     if real_lix ra < ix then
-      Strategy.grow ra.strategy (resizer ra.vlix ra) (succ ix)
+      Strategy.grow ra.strategy (fun x -> resizer ra.vlix ra x) (succ ix)
 
   let maybe_grow_ix ra new_lix = guarantee_ix ra new_lix; ra.vlix <- new_lix
 
@@ -225,10 +225,10 @@ module Make (S : Strat.T) (Impl : Implementation) = struct
 
   let sof_list strategy l = of_list_aux (screate strategy (List.length l)) 0 l
 
-  let to_array ra = Array.init (length ra) (unsafe_get ra)
+  let to_array ra = Array.init (length ra) (fun i -> unsafe_get ra i)
 
   let sof_array strategy ar =
-    sinit strategy (Array.length ar) (Array.unsafe_get ar)
+    sinit strategy (Array.length ar) (fun i -> Array.unsafe_get ar i)
 
   let of_array ar = sof_array Strategy.default ar
 

@@ -11,7 +11,7 @@ LIBINSTALL_FILES = res.mli strat.mli pres_intf.mli nopres_intf.mli \
                    strat.cmi pres_intf.cmi nopres_intf.cmi weak_intf.cmi \
 		   res.cmi res.cma res.cmxa res.a
 
-all:
+all:	byte-code-library native-code-library
 
 install:	libinstall
 uninstall:	libuninstall

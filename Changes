@@ -1,3 +1,5 @@
+2008-05-09: Added unsafe_expose_array to parameterized resizable arrays.
+
 2006-11-22: Updated OCamlMakefile.
 
 2005-12-26: Fixed a build problem.

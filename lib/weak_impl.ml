@@ -101,7 +101,7 @@ module Make (S : Strat.T) = struct
 
   let enforce_strategy ra =
     let real_len = real_length ra and len = length ra in
-    Strategy.shrink ra.strategy (resizer ra.vlix ra) real_len len
+    Strategy.shrink ra.strategy (fun x -> resizer ra.vlix ra x) real_len len
 
   let set_strategy ra strategy = ra.strategy <- strategy; enforce_strategy ra
   let put_strategy ra strategy = ra.strategy <- strategy
@@ -147,7 +147,7 @@ module Make (S : Strat.T) = struct
 
   let guarantee_ix ra ix =
     if real_lix ra < ix then
-      Strategy.grow ra.strategy (resizer ra.vlix ra) (succ ix)
+      Strategy.grow ra.strategy (fun x -> resizer ra.vlix ra x) (succ ix)
 
   let maybe_grow_ix ra new_lix = guarantee_ix ra new_lix; ra.vlix <- new_lix
 

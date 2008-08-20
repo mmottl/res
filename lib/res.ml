@@ -265,7 +265,7 @@ module MakeBuffer (S : Strat.T) = struct
   let output_buffer ch buf = output ch buf.ar 0 (length buf)
 
   let sof_string strategy str =
-    sinit strategy (String.length str) (String.unsafe_get str)
+    sinit strategy (String.length str) (fun i -> String.unsafe_get str i)
 
   let of_string = sof_string Strategy.default
 end
