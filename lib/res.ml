@@ -1,7 +1,7 @@
 (*
    RES - Automatically Resizing Contiguous Memory for OCaml
 
-   Copyright (C) 1999-2002  Markus Mottl
+   Copyright (C) 1999-  Markus Mottl
    email: markus.mottl@gmail.com
    WWW:   http://www.ocaml.info
 
@@ -27,12 +27,13 @@ module DefStrat = struct
 
   let default = 1.5, 0.5, 16
 
-  let grow (waste, _, min_size) resizer new_len =
-    resizer (max (truncate (float new_len *. waste)) min_size)
+  let grow (waste, _, min_size) new_len =
+    max (truncate (float new_len *. waste)) min_size
 
-  let shrink (waste, shrink_trig, min_size) resizer rlen new_len =
-    if rlen > min_size && truncate (float rlen *. shrink_trig) > new_len then
-      resizer (max (truncate (float new_len *. waste)) min_size)
+  let shrink (waste, shrink_trig, min_size) ~real_len ~new_len =
+    if real_len > min_size && truncate (float real_len *. shrink_trig) > new_len
+    then max (truncate (float new_len *. waste)) min_size
+    else -1
 end
 
 module BitDefStrat = struct

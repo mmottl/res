@@ -1,7 +1,7 @@
 (*
    RES - Automatically Resizing Contiguous Memory for OCaml
 
-   Copyright (C) 1999-2002  Markus Mottl
+   Copyright (C) 1999-  Markus Mottl
    email: markus.mottl@gmail.com
    WWW:   http://www.ocaml.info
 
@@ -29,18 +29,25 @@ module type T = sig
   val default : t
   (** Default strategy of this strategy implementation. *)
 
-  val grow : t -> (int -> unit) -> int -> unit
-  (** [grow strat resizer new_len] grows some contiguous
-      datastructure using strategy [strat] to a new (virtual) length
-      [new_len] by calling its resizer function with its new (real)
-      length. Be careful, the new (real) length {b must} be larger than
-      the new (virtual) length, otherwise your program will crash! *)
+  val grow : t -> int -> int
+  (** [grow strat new_len] @return the new real length of some contiguous
+      datastructure using strategy [strat] given new virtual length
+      [new_len].  The user should then use this new real length to resize
+      the datastructure.
 
-  val shrink : t -> (int -> unit) -> int -> int -> unit
-  (** [shrink strat resizer real_len new_len] (possibly) shrinks
-      some contiguous datastructure of length [real_len] depending
-      on its demanded new (virtual) length [new_len] by calling its
-      resizer function with its new (real) length. Be careful, the new
-      (real) length {b must} be larger than the new (virtual) length,
-      otherwise your program will crash! *)
+      Be careful, the new (real) length {b must} be larger than the new
+      virtual length, otherwise your program will crash!
+  *)
+
+  val shrink : t -> real_len : int -> new_len : int -> int
+  (** [shrink strat ~real_len ~new_len] @return the new real length
+      of a resizable datastructure given its current real length
+      [real_len] and its required new virtual length [new_len]
+      wrt. strategy [strat].  The user should then use this new real
+      length to resize the datastructure.  If [-1] is returned, it is
+      not necessary to resize.
+
+      Be careful, the new (real) length {b must} be larger than the new
+      (virtual) length, otherwise your program may crash!
+  *)
 end

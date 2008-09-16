@@ -73,11 +73,13 @@ module Make (S : Strat.T) (Impl : Implementation) = struct
 
   let screate strategy n =
     let res = {ar = no_obj (); vlix = pred n; strategy = strategy} in
-    Strategy.grow strategy (fun rlen -> res.ar <- creator rlen) n; res
+    res.ar <- creator (Strategy.grow strategy n);
+    res
 
   let smake strategy n x =
     let res = {ar = no_obj (); vlix = pred n; strategy = strategy} in
-    Strategy.grow strategy (fun rlen -> res.ar <- Impl.make rlen x) n; res
+    res.ar <- Impl.make (Strategy.grow strategy n) x;
+    res
 
   let create_fresh n = screate Strategy.default n
 
@@ -86,7 +88,8 @@ module Make (S : Strat.T) (Impl : Implementation) = struct
 
   let sempty strategy =
     let res = {ar = no_obj (); vlix = -1; strategy = strategy} in
-    Strategy.grow strategy (fun rlen -> res.ar <- creator rlen) 0; res
+    res.ar <- creator (Strategy.grow strategy 0);
+    res
 
   let empty () = sempty Strategy.default
 
@@ -107,8 +110,9 @@ module Make (S : Strat.T) (Impl : Implementation) = struct
     ra.ar <- ar
 
   let enforce_strategy ra =
-    let real_len = real_length ra and len = length ra in
-    Strategy.shrink ra.strategy (fun x -> resizer ra.vlix ra x) real_len len
+    let real_len = real_length ra and new_len = length ra in
+    let new_real_len = Strategy.shrink ra.strategy ~real_len ~new_len in
+    if new_real_len <> -1 then resizer ra.vlix ra new_real_len
 
   let set_strategy ra strategy = ra.strategy <- strategy; enforce_strategy ra
   let put_strategy ra strategy = ra.strategy <- strategy
@@ -150,7 +154,7 @@ module Make (S : Strat.T) (Impl : Implementation) = struct
 
   let guarantee_ix ra ix =
     if real_lix ra < ix then
-      Strategy.grow ra.strategy (fun x -> resizer ra.vlix ra x) (succ ix)
+      resizer ra.vlix ra (Strategy.grow ra.strategy (succ ix))
 
   let maybe_grow_ix ra new_lix = guarantee_ix ra new_lix; ra.vlix <- new_lix
 
