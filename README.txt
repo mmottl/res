@@ -29,7 +29,7 @@ OcamlMakefile       - Makefile for easy handling of compilation of not
                       generates native- or byte-code, as executable or
                       as library - with thread-support if you want!
 
-README              - this file
+README.txt          - this file
 
 examples/
 
