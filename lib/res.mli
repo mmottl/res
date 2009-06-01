@@ -1,7 +1,7 @@
 (*
    RES - Automatically Resizing Contiguous Memory for OCaml
 
-   Copyright (C) 1999-2002  Markus Mottl
+   Copyright (C) 1999-  Markus Mottl
    email: markus.mottl@gmail.com
    WWW:   http://www.ocaml.info
 
@@ -19,8 +19,6 @@
    License along with this library; if not, write to the Free Software
    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 *)
-
-(* $Id: res.mli,v 1.12 2005/11/07 20:25:28 mottl Exp $ *)
 
 (** Global module for resizable datastructures and default implementations *)
 
@@ -43,10 +41,6 @@ module BitDefStrat : (Strat.T with type t = float * float * int)
 
 (** Resizable parameterized array using the default reallocation strategy. *)
 module Array : (Pres_intf.T with module Strategy = DefStrat)
-
-(** Resizable int array using the default reallocation strategy. *)
-module Ints
-  : (Nopres_intf.T with module Strategy = DefStrat and type el = int)
 
 (** Resizable float array using the default reallocation strategy. *)
 module Floats
@@ -71,11 +65,6 @@ module Buffer
     strategies. *)
 module MakeArray : functor (S : Strat.T) ->
   (Pres_intf.T with module Strategy = S)
-
-(** Functor that creates resizable int arrays from reallocation
-    strategies. *)
-module MakeInts : functor (S : Strat.T) ->
-  (Nopres_intf.T with module Strategy = S and type el = int)
 
 (** Functor that creates resizable float arrays from reallocation
     strategies. *)

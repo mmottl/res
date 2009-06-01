@@ -1,7 +1,7 @@
 (*
    RES - Automatically Resizing Contiguous Memory for OCaml
 
-   Copyright (C) 1999-2002  Markus Mottl
+   Copyright (C) 1999-  Markus Mottl
    email: markus.mottl@gmail.com
    WWW:   http://www.ocaml.info
 
@@ -20,27 +20,29 @@
    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 *)
 
-(* $Id: weak_impl.ml,v 1.10 2005/11/07 20:25:28 mottl Exp $ *)
+(* TODO: make safe and improve *)
 
 module Make (S : Strat.T) = struct
   module Strategy = S
 
   type strategy = Strategy.t
 
-  type 'a t = {mutable ar : 'a Weak.t;
-               mutable vlix : int;
-               mutable strategy : strategy}
+  type 'a t = {
+    mutable ar : 'a Weak.t;
+    mutable vlix : int;
+    mutable strategy : strategy
+  }
 
   let name = "Res.Weak"
 
   let invalid_arg str = invalid_arg (name ^ "." ^ str)
   let failwith str = failwith (name ^ "." ^ str)
 
-  let length ra = succ ra.vlix
-  let lix ra = ra.vlix 
+  let length ra = ra.vlix + 1
+  let lix ra = ra.vlix
 
   let real_length ra = Weak.length ra.ar
-  let real_lix ra = pred (real_length ra)
+  let real_lix ra = real_length ra - 1
 
   let unsafe_get ra ix = Weak.get ra.ar ix
   let unsafe_set ra ix el = Weak.set ra.ar ix el
@@ -48,14 +50,14 @@ module Make (S : Strat.T) = struct
   let check ra ix = Weak.check ra.ar ix
 
   let get ra n =
-    if n > ra.vlix or n < 0 then invalid_arg "get" else unsafe_get ra n
+    if n > ra.vlix || n < 0 then invalid_arg "get" else unsafe_get ra n
 
   let get_copy ra n =
-    if n > ra.vlix or n < 0 then invalid_arg "get_copy"
+    if n > ra.vlix || n < 0 then invalid_arg "get_copy"
     else Weak.get_copy ra.ar n
 
   let set ra n =
-    if n > ra.vlix or n < 0 then invalid_arg "set" else unsafe_set ra n
+    if n > ra.vlix || n < 0 then invalid_arg "set" else unsafe_set ra n
 
   let dummy_loc = 0
   let no_obj () = Obj.magic dummy_loc
@@ -63,7 +65,7 @@ module Make (S : Strat.T) = struct
   let creator = Weak.create
 
   let screate_fresh strategy n =
-    let res = {ar = no_obj (); vlix = pred n; strategy = strategy} in
+    let res = {ar = no_obj (); vlix = n - 1; strategy = strategy} in
     res.ar <- creator (Strategy.grow strategy n);
     res
 
@@ -81,7 +83,7 @@ module Make (S : Strat.T) = struct
 
   let smake strategy n x =
     let res = screate_fresh strategy n in
-    for i = 0 to pred n do unsafe_set res i x done; res
+    for i = 0 to n - 1 do unsafe_set res i x done; res
 
   let make n = smake Strategy.default n
 
@@ -90,7 +92,7 @@ module Make (S : Strat.T) = struct
 
   let sinit strategy n f =
     let res = screate_fresh strategy n in
-    for i = 0 to pred n do unsafe_set res i (f i) done; res
+    for i = 0 to n - 1 do unsafe_set res i (f i) done; res
 
   let init n f = sinit Strategy.default n f
 
@@ -102,7 +104,8 @@ module Make (S : Strat.T) = struct
     ra.ar <- ar
 
   let enforce_strategy ra =
-    let real_len = real_length ra and new_len = length ra in
+    let real_len = real_length ra in
+    let new_len = length ra in
     let new_real_len = Strategy.shrink ra.strategy ~real_len ~new_len in
     if new_real_len <> -1 then resizer ra.vlix ra new_real_len
 
@@ -116,18 +119,20 @@ module Make (S : Strat.T) = struct
 
   let unsafe_blit_on_other ra1 ofs1 ra2 ofs2 len =
     let ofs_diff = ofs2 - ofs1 in
-    for i = ofs1 to ofs1 + pred len do
+    for i = ofs1 to ofs1 + len - 1 do
       unsafe_set ra2 (i + ofs_diff) (unsafe_get ra1 i) done
 
   let append ra1 ra2 = match ra1.vlix, ra2.vlix with
     | -1, -1 -> empty ()
     | _, -1 -> copy ra1
     | -1, _ -> copy ra2
-    | _ -> let len1 = length ra1
-           and len2 = length ra2 in
-           let res = create_fresh (len1 + len2) in
-           unsafe_blit_on_other ra1 0 res 0 len1;
-           unsafe_blit_on_other ra2 0 res len1 len2; res
+    | _ ->
+        let len1 = length ra1 in
+        let len2 = length ra2 in
+        let res = create_fresh (len1 + len2) in
+        unsafe_blit_on_other ra1 0 res 0 len1;
+        unsafe_blit_on_other ra2 0 res len1 len2;
+        res
 
   let rec concat_aux res offset = function
     | [] -> res
@@ -145,29 +150,30 @@ module Make (S : Strat.T) = struct
     let res = create_fresh len in unsafe_blit_on_other ra ofs res 0 len; res
 
   let sub ra ofs len =
-    if ofs < 0 or len < 0 or ofs + len > length ra then invalid_arg "sub"
+    if ofs < 0 || len < 0 || ofs + len > length ra then invalid_arg "sub"
     else unsafe_sub ra ofs len
 
   let guarantee_ix ra ix =
     if real_lix ra < ix then
-      resizer ra.vlix ra (Strategy.grow ra.strategy (succ ix))
+      resizer ra.vlix ra (Strategy.grow ra.strategy (ix + 1))
 
   let maybe_grow_ix ra new_lix = guarantee_ix ra new_lix; ra.vlix <- new_lix
 
   let add_one ra x = let n = length ra in maybe_grow_ix ra n; unsafe_set ra n x
 
   let unsafe_remove_one ra =
-    unsafe_set ra ra.vlix None; ra.vlix <- pred ra.vlix;
+    unsafe_set ra ra.vlix None; ra.vlix <- ra.vlix - 1;
     enforce_strategy ra
 
   let remove_one ra =
     if ra.vlix < 0 then failwith "remove_one" else unsafe_remove_one ra
 
   let unsafe_remove_n ra n =
-    let old_vlix = ra.vlix and old_ar = ra.ar in
+    let old_vlix = ra.vlix in
+    let old_ar = ra.ar in
     ra.vlix <- old_vlix - n; enforce_strategy ra;
     if old_ar == ra.ar then
-      for i = succ ra.vlix to old_vlix do unsafe_set ra i None done
+      for i = ra.vlix + 1 to old_vlix do unsafe_set ra i None done
 
   let remove_n ra n =
     if n > length ra || n < 0 then invalid_arg "remove_n"
@@ -178,7 +184,7 @@ module Make (S : Strat.T) = struct
     unsafe_remove_n ra len
 
   let remove_range ra ofs len =
-    if ofs < 0 or len < 0 or ofs + len > length ra then
+    if ofs < 0 || len < 0 || ofs + len > length ra then
       invalid_arg "remove_range"
     else unsafe_remove_range ra ofs len
 
@@ -190,7 +196,7 @@ module Make (S : Strat.T) = struct
     unsafe_set ra m tmp
 
   let swap ra n m =
-    if n > ra.vlix or m > ra.vlix or n < 0 or m < 0 then invalid_arg "swap"
+    if n > ra.vlix || m > ra.vlix || n < 0 || m < 0 then invalid_arg "swap"
     else unsafe_swap ra n m
 
   let unsafe_swap_in_last ra n =
@@ -198,30 +204,32 @@ module Make (S : Strat.T) = struct
     unsafe_remove_one ra
 
   let swap_in_last ra n =
-    if n > ra.vlix or n < 0 then invalid_arg "swap_in_last"
+    if n > ra.vlix || n < 0 then invalid_arg "swap_in_last"
     else unsafe_swap_in_last ra n
 
   let unsafe_fill ra ofs len x =
-    let last = ofs + pred len in
+    let last = ofs + len - 1 in
     guarantee_ix ra (max last ra.vlix);
     for i = ofs to last do unsafe_set ra i x done
 
   let fill ra ofs len x =
-    if ofs < 0 or len < 0 or ofs > length ra then invalid_arg "fill"
+    if ofs < 0 || len < 0 || ofs > length ra then invalid_arg "fill"
     else unsafe_fill ra ofs len x
 
   let unsafe_blit ra1 ofs1 ra2 ofs2 len =
-    guarantee_ix ra2 (ofs2 + pred len);
+    guarantee_ix ra2 (ofs2 + len - 1);
     if ofs1 < ofs2 then
-      for i = pred len downto 0 do
+      for i = len - 1 downto 0 do
         unsafe_set ra2 (ofs2 + i) (unsafe_get ra1 (ofs1 + i)) done
     else
-      for i = 0 to pred len do
+      for i = 0 to len - 1 do
         unsafe_set ra2 (ofs2 + i) (unsafe_get ra1 (ofs1 + i)) done
 
   let blit ra1 ofs1 ra2 ofs2 len =
-    if len < 0 or ofs1 < 0 or ofs2 < 0 or ofs1 + len > length ra1 or
-       ofs2 > length ra2 then invalid_arg "blit"
+    if
+      len < 0 || ofs1 < 0 || ofs2 < 0
+      || ofs1 + len > length ra1 || ofs2 > length ra2
+    then invalid_arg "blit"
     else unsafe_blit ra1 ofs1 ra2 ofs2 len
 
   let to_std ra =
@@ -233,13 +241,13 @@ module Make (S : Strat.T) = struct
   let of_std ar = sof_std Strategy.default ar
 
   let rec to_list_aux ra i accu =
-    if i < 0 then accu else to_list_aux ra (pred i) (unsafe_get ra i :: accu)
+    if i < 0 then accu else to_list_aux ra (i - 1) (unsafe_get ra i :: accu)
 
   let to_list ra = to_list_aux ra ra.vlix []
 
   let rec of_list_aux res i = function
-    | [] -> res 
-    | h::t -> unsafe_set res i h; of_list_aux res (succ i) t
+    | [] -> res
+    | h::t -> unsafe_set res i h; of_list_aux res (i + 1) t
 
   let of_list l = of_list_aux (create_fresh (List.length l)) 0 l
 
@@ -257,49 +265,49 @@ module Make (S : Strat.T) = struct
 
   let rec for_all_aux i p ra =
     if i > ra.vlix then true
-    else if p (unsafe_get ra i) then for_all_aux (succ i) p ra else false
+    else if p (unsafe_get ra i) then for_all_aux (i + 1) p ra else false
 
   let for_all p ra = for_all_aux 0 p ra
 
   let rec exists_aux i p ra =
     if i > ra.vlix then false
-    else if p (unsafe_get ra i) then true else exists_aux (succ i) p ra
+    else if p (unsafe_get ra i) then true else exists_aux (i + 1) p ra
 
   let exists p ra = exists_aux 0 p ra
 
   let rec mem_aux i x ra =
     if i > ra.vlix then false
-    else if unsafe_get ra i = x then true else mem_aux (succ i) x ra
+    else if unsafe_get ra i = x then true else mem_aux (i + 1) x ra
 
   let mem x ra = mem_aux 0 x ra
 
   let rec memq_aux i x ra =
     if i > ra.vlix then false
-    else if unsafe_get ra i == x then true else memq_aux (succ i) x ra
+    else if unsafe_get ra i == x then true else memq_aux (i + 1) x ra
 
   let memq x ra = memq_aux 0 x ra
 
   let rec pos_aux i x ra =
     if i > ra.vlix then None
-    else if unsafe_get ra i = x then Some i else pos_aux (succ i) x ra
+    else if unsafe_get ra i = x then Some i else pos_aux (i + 1) x ra
 
   let pos x ra = pos_aux 0 x ra
 
   let rec posq_aux i x ra =
     if i > ra.vlix then None
-    else if unsafe_get ra i == x then Some i else posq_aux (succ i) x ra
+    else if unsafe_get ra i == x then Some i else posq_aux (i + 1) x ra
 
   let posq x ra = posq_aux 0 x ra
 
   let rec find_aux i p ra =
     if i > ra.vlix then raise Not_found
-    else let el = unsafe_get ra i in if p el then el else find_aux (succ i) p ra
+    else let el = unsafe_get ra i in if p el then el else find_aux (i + 1) p ra
 
   let find p ra = find_aux 0 p ra
 
   let rec find_index_aux p ra i =
     if i > ra.vlix then raise Not_found
-    else if p (unsafe_get ra i) then i else find_index_aux p ra (succ i)
+    else if p (unsafe_get ra i) then i else find_index_aux p ra (i + 1)
 
   let find_index p ra i =
     if i < 0 then invalid_arg "find_index" else find_index_aux p ra i
@@ -313,8 +321,8 @@ module Make (S : Strat.T) = struct
   let find_all = filter
 
   let filter_in_place p ra =
-    let dest = ref 0
-    and pos = ref 0 in
+    let dest = ref 0 in
+    let pos = ref 0 in
     while !pos <= ra.vlix do
       let el = unsafe_get ra !pos in
       if p el then begin unsafe_set ra !dest el; incr dest end;

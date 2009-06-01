@@ -1,3 +1,5 @@
+2009-06-01: Robustified implementation to avoid internal use of Obg.magic.
+
 2008-09-16: Changed strategy API to greatly improve performance of
             growing/shrinking.
 
@@ -37,7 +39,7 @@
 2002-05-04: Revised the whole installation procedure. See INSTALL for
             details.
 
-2002-04-30: Updated OcamlMakefile: it does not ask for confirmation
+2002-04-30: Updated OCamlMakefile: it does not ask for confirmation
             during installation anymore!
 
 2001-06-30: Removed "Printexc.catch" from stupid_ga-example: is going
@@ -54,20 +56,20 @@
             shorter. This change requires an OCaml-version higher
             than 3.00.
 
-2001-01-24: Updated OcamlMakefile
+2001-01-24: Updated OCamlMakefile
 
-2000-06-24: Updated OcamlMakefile
+2000-06-24: Updated OCamlMakefile
 
-2000-06-13: Updated OcamlMakefile
+2000-06-13: Updated OCamlMakefile
 
-2000-06-11: Updated OcamlMakefile
+2000-06-11: Updated OCamlMakefile
 
-2000-06-08: Added installation routine + updated OcamlMakefile again:
+2000-06-08: Added installation routine + updated OCamlMakefile again:
 
             This upgrade makes installation much easier! Read the
             updated INSTALL-file!
 
-2000-06-07: Upgraded to new OcamlMakefile.
+2000-06-07: Upgraded to new OCamlMakefile.
 
 2000-04-28: Fixed *critical* bug:
 

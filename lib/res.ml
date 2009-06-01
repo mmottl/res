@@ -20,8 +20,6 @@
    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 *)
 
-(* $Id: res.ml,v 1.18 2005/11/07 20:25:28 mottl Exp $ *)
-
 module DefStrat = struct
   type t = float * float * int
 
@@ -41,58 +39,62 @@ module BitDefStrat = struct
   let default = 1.5, 0.5, 1024
 end
 
-module Array_Impl = struct
+module Unsafe_array_impl = struct
   type 'a t = 'a array
 
+  let name = "Res.Unsafe_array"
+  let length = Array.length
+  let make = Array.make
+  let unsafe_get = Array.unsafe_get
+  let unsafe_set = Array.unsafe_set
+end
+
+module Array_impl = struct
+  include Unsafe_array_impl
   let name = "Res.Array"
-  let length = Array.length
-  let make = Array.make
-  let unsafe_get = Array.unsafe_get
-  let unsafe_set = Array.unsafe_set
+  let unsafe_get = Array.get
+  let unsafe_set = Array.set
 end
 
-module Int_Impl = struct
-  type el = int
-  type t = el array
-
-  let name = "Res.Ints"
-  let length = Array.length
-  let create n = Array.create n 0
-  let make = Array.make
-  let unsafe_get = Array.unsafe_get
-  let unsafe_set = Array.unsafe_set
-
-  let unsafe_blit ar1 ofs1 ar2 ofs2 len =
-    if ofs1 < ofs2 then
-      for i = pred len downto 0 do
-        unsafe_set ar2 (ofs2 + i) (unsafe_get ar1 (ofs1 + i)) done
-    else
-      for i = 0 to pred len do
-        unsafe_set ar2 (ofs2 + i) (unsafe_get ar1 (ofs1 + i)) done
-end
-
-module Float_Impl = struct
+module Unsafe_float_impl = struct
   type el = float
   type t = el array
 
-  let name = "Res.Floats"
+  let name = "Res.Unsafe_floats"
   let length = Array.length
   let create n = Array.create n 0.0
   let make = Array.make
   let unsafe_get = Array.unsafe_get
   let unsafe_set = Array.unsafe_set
 
-  let unsafe_blit ar1 ofs1 ar2 ofs2 len =
+  let unsafe_blit (ar1 : t) ofs1 ar2 ofs2 len =
     if ofs1 < ofs2 then
-      for i = pred len downto 0 do
+      for i = len - 1 downto 0 do
         unsafe_set ar2 (ofs2 + i) (unsafe_get ar1 (ofs1 + i)) done
     else
-      for i = 0 to pred len do
+      for i = 0 to len - 1 do
         unsafe_set ar2 (ofs2 + i) (unsafe_get ar1 (ofs1 + i)) done
 end
 
+module Float_impl = struct
+  include Unsafe_float_impl
+
+  let name = "Res.Floats"
+  let unsafe_get = Array.get
+  let unsafe_set = Array.set
+
+  let unsafe_blit ar1 ofs1 ar2 ofs2 len =
+    if
+      len < 0 || ofs1 < 0
+      || ofs1 > Array.length ar1 - len
+      || ofs2 < 0 || ofs2 > Array.length ar2 - len
+    then invalid_arg "Res.Floats.blit"
+    else unsafe_blit ar1 ofs1 ar2 ofs2 len
+end
+
+(* TODO: create safe version *)
 (* Code of the Bit-module due to Jean-Christophe Filliatre *)
-module Bit_Impl = struct
+module Bit_impl = struct
   type el = bool
   type t = { length : int; bits : int array }
 
@@ -107,13 +109,16 @@ module Bit_Impl = struct
   let bit_j = Array.init bpi (fun j -> 1 lsl j)
   let bit_not_j = Array.init bpi (fun j -> max_int - bit_j.(j))
 
-  let low_mask = Array.create (succ bpi) 0
-  let _ =
-    for i = 1 to bpi do low_mask.(i) <- low_mask.(i-1) lor bit_j.(pred i) done
+  let low_mask = Array.create (bpi + 1) 0
+
+  let () =
+    for i = 1 to bpi do
+      low_mask.(i) <- low_mask.(i-1) lor bit_j.(i - 1)
+    done
 
   let keep_lowest_bits a j = a land low_mask.(j)
 
-  let high_mask = Array.init (succ bpi) (fun j -> low_mask.(j) lsl (bpi-j))
+  let high_mask = Array.init (bpi + 1) (fun j -> low_mask.(j) lsl (bpi-j))
 
   let keep_highest_bits a j = a land high_mask.(j)
 
@@ -123,7 +128,7 @@ module Bit_Impl = struct
     if r = 0 then { length = n; bits = Array.create (n / bpi) initv }
     else begin
       let s = n / bpi in
-      let b = Array.create (succ s) initv in
+      let b = Array.create (s + 1) initv in
       b.(s) <- b.(s) land low_mask.(r);
       { length = n; bits = b }
     end
@@ -131,7 +136,8 @@ module Bit_Impl = struct
   let create n = make n false
 
   let pos n =
-    let i = n / bpi and j = n mod bpi in
+    let i = n / bpi in
+    let j = n mod bpi in
     if j < 0 then (i - 1, j + bpi) else (i,j)
 
   let unsafe_get v n =
@@ -159,9 +165,9 @@ module Bit_Impl = struct
         Array.unsafe_set v i'
           (((keep_lowest_bits (a lsr i) (bpi - j)) lsl j) lor
            (keep_lowest_bits (Array.unsafe_get v i') j));
-        Array.unsafe_set v (succ i')
+        Array.unsafe_set v (i' + 1)
           ((keep_lowest_bits (a lsr (i + bpi - j)) d) lor
-           (keep_highest_bits (Array.unsafe_get v (succ i')) (bpi - d)))
+           (keep_highest_bits (Array.unsafe_get v (i' + 1)) (bpi - d)))
       end else
         Array.unsafe_set v i'
           (((keep_lowest_bits (a lsr i) m) lsl j) lor
@@ -175,8 +181,8 @@ module Bit_Impl = struct
       Array.unsafe_set v i
         ( (keep_lowest_bits (Array.unsafe_get v i) j) lor
          ((keep_lowest_bits a (bpi - j)) lsl j));
-      Array.unsafe_set v (succ i)
-        ((keep_highest_bits (Array.unsafe_get v (succ i)) (bpi - j)) lor
+      Array.unsafe_set v (i + 1)
+        ((keep_highest_bits (Array.unsafe_get v (i + 1)) (bpi - j)) lor
          (a lsr (bpi - j)))
     end
 
@@ -188,19 +194,19 @@ module Bit_Impl = struct
     else begin
       blit_bits (Array.unsafe_get v1.bits bi) bj (bpi - bj) v2.bits ofs2;
       let n = ref (ofs2 + bpi - bj) in
-      for i = succ bi to pred ei do
+      for i = bi + 1 to ei - 1 do
         blit_int (Array.unsafe_get v1.bits i) v2.bits !n;
         n := !n + bpi
       done;
-      blit_bits (Array.unsafe_get v1.bits ei) 0 (succ ej) v2.bits !n
+      blit_bits (Array.unsafe_get v1.bits ei) 0 (ej + 1) v2.bits !n
     end
 end
 
-module Buffer_Impl = struct
+module Buffer_unsafe_impl = struct
   type el = char
   type t = string
 
-  let name = "Res.Buffer"
+  let name = "Res.Unsafe_buffer"
   let length = String.length
   let create = String.create
   let make = String.make
@@ -209,14 +215,22 @@ module Buffer_Impl = struct
   let unsafe_blit = String.unsafe_blit
 end
 
-module MakeArray (S : Strat.T) = Pres_impl.Make (S) (Array_Impl)
-module MakeInts (S : Strat.T) = Nopres_impl.Make (S) (Int_Impl)
-module MakeFloats (S : Strat.T) = Nopres_impl.Make (S) (Float_Impl)
-module MakeBits (S : Strat.T) = Nopres_impl.Make (S) (Bit_Impl)
+module Buffer_impl = struct
+  include Buffer_unsafe_impl
+
+  let name = "Res.Buffer"
+  let unsafe_get = String.get
+  let unsafe_set = String.set
+  let unsafe_blit = String.blit
+end
+
+module MakeArray (S : Strat.T) = Pres_impl.Make (S) (Array_impl)
+module MakeFloats (S : Strat.T) = Nopres_impl.Make (S) (Float_impl)
+module MakeBits (S : Strat.T) = Nopres_impl.Make (S) (Bit_impl)
 module MakeWeak (S : Strat.T) = Weak_impl.Make (S)
 
 module MakeBuffer (S : Strat.T) = struct
-  module B = Nopres_impl.Make (S) (Buffer_Impl)
+  module B = Nopres_impl.Make (S) (Buffer_impl)
   include B
 
   let create _ = empty ()
@@ -225,8 +239,8 @@ module MakeBuffer (S : Strat.T) = struct
   let add_char = add_one
 
   let add_string buf str =
-    let old_buf_len = length buf
-    and len = String.length str in
+    let old_buf_len = length buf in
+    let len = String.length str in
     maybe_grow_ix buf (buf.vlix + len);
     String.blit str 0 buf.ar old_buf_len len
 
@@ -243,7 +257,9 @@ module MakeBuffer (S : Strat.T) = struct
     let old_buf_len = length buf in
     maybe_grow_ix buf (buf.vlix + len);
     try really_input ch buf.ar old_buf_len len with
-    | End_of_file -> buf.vlix <- pred old_buf_len; enforce_strategy buf
+    | End_of_file ->
+        buf.vlix <- old_buf_len - 1;
+        enforce_strategy buf
 
   let rec add_full_channel_f_aux buf ch len adjust =
     if len > 0 then begin
@@ -272,7 +288,6 @@ module MakeBuffer (S : Strat.T) = struct
 end
 
 module Array = MakeArray (DefStrat)
-module Ints = MakeInts (DefStrat)
 module Floats = MakeFloats (DefStrat)
 module Bits = MakeBits (BitDefStrat)
 module Weak = MakeWeak (DefStrat)
