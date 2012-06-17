@@ -5,6 +5,7 @@ SOURCES = strat.mli \
           nopres_intf.mli nopres_impl.ml \
           weak_intf.mli weak_impl.ml \
           res.mli res.ml
+OCAMLFLAGS = -w Aer -strict-sequence
 RESULT  = res
 
 LIBINSTALL_FILES = res.mli strat.mli pres_intf.mli nopres_intf.mli \

@@ -39,19 +39,12 @@ module BitDefStrat = struct
   let default = 1.5, 0.5, 1024
 end
 
-module Unsafe_array_impl = struct
+module Array_impl = struct
   type 'a t = 'a array
 
-  let name = "Res.Unsafe_array"
+  let name = "Res.Array"
   let length = Array.length
   let make = Array.make
-  let unsafe_get = Array.unsafe_get
-  let unsafe_set = Array.unsafe_set
-end
-
-module Array_impl = struct
-  include Unsafe_array_impl
-  let name = "Res.Array"
   let unsafe_get = Array.get
   let unsafe_set = Array.set
 end
@@ -60,7 +53,6 @@ module Unsafe_float_impl = struct
   type el = float
   type t = el array
 
-  let name = "Res.Unsafe_floats"
   let length = Array.length
   let create n = Array.create n 0.0
   let make = Array.make
@@ -103,8 +95,6 @@ module Bit_impl = struct
   let length v = v.length
 
   let bpi = Sys.word_size - 2
-
-  let max_length = Sys.max_array_length * bpi
 
   let bit_j = Array.init bpi (fun j -> 1 lsl j)
   let bit_not_j = Array.init bpi (fun j -> max_int - bit_j.(j))
@@ -202,21 +192,13 @@ module Bit_impl = struct
     end
 end
 
-module Buffer_unsafe_impl = struct
+module Buffer_impl = struct
   type el = char
   type t = string
 
-  let name = "Res.Unsafe_buffer"
   let length = String.length
   let create = String.create
   let make = String.make
-  let unsafe_get = String.unsafe_get
-  let unsafe_set = String.unsafe_set
-  let unsafe_blit = String.unsafe_blit
-end
-
-module Buffer_impl = struct
-  include Buffer_unsafe_impl
 
   let name = "Res.Buffer"
   let unsafe_get = String.get
