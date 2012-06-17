@@ -1,3 +1,0 @@
-OCamlMakeProjDefaults(weak_ex.exe)
-
-InstantiateOCamlEnv()

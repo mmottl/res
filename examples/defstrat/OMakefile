@@ -1,3 +1,0 @@
-OCamlMakeProjDefaults(defstrat.exe)
-
-InstantiateOCamlEnv()
