@@ -20,8 +20,6 @@
    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 *)
 
-(* $Id: pres_intf.mli,v 1.17 2005/11/07 20:25:28 mottl Exp $ *)
-
 (** Interface to parameterized resizable arrays *)
 module type T = sig
   (** {6 Signatures and types} *)

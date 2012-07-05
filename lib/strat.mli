@@ -20,8 +20,6 @@
    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 *)
 
-(* $Id: strat.mli,v 1.6 2005/11/07 20:25:28 mottl Exp $ *)
-
 (** Interface to strategies *)
 module type T = sig
   type t (** The abstract type of strategies. *)
