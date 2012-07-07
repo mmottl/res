@@ -1,6 +1,11 @@
-name="res"
-version="3.2.0"
-description="RES - resizable contiguous memory"
-requires=""
-archive(byte)="res.cma"
-archive(native)="res.cmxa"
+# OASIS_START
+# DO NOT EDIT (digest: d41a37c0f60d28919281936081ab19d9)
+version = "3.2.1"
+description = "RES - Library for resizable, contiguous datastructures."
+archive(byte) = "res.cma"
+archive(byte, plugin) = "res.cma"
+archive(native) = "res.cmxa"
+archive(native, plugin) = "res.cmxs"
+exists_if = "res.cma"
+# OASIS_STOP
+

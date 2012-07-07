@@ -1,0 +1,82 @@
+OASISFormat:      0.3
+Name:             res
+Version:          3.2.1
+Synopsis:         RES - Library for resizable, contiguous datastructures.
+Description:      RES is a library containing resizable arrays, strings, and bitvectors.
+Authors:          Markus Mottl <markus.mottl@gmail.com>
+Copyrights:       (C) 1999-2012 Markus Mottl <markus.mottl@gmail.com>
+Maintainers:      Markus Mottl <markus.mottl@gmail.com>
+LicenseFile:      COPYING.txt
+License:          LGPL-2.1+ with OCaml linking exception
+OCamlVersion:     >= 3.12
+FindlibVersion:   >= 1.3.2
+Homepage:         https://bitbucket.org/mmottl/res
+#Categories:
+#FilesAB:
+
+Plugins:          META (0.3), StdFiles (0.3), DevFiles (0.3)
+XStdFilesREADME:  false
+
+Library res
+  Path:           lib
+  FindlibName:    res
+  Modules:        Nopres_impl,
+                  Nopres_intf,
+                  Pres_impl,
+                  Pres_intf,
+                  Res,
+                  Strat,
+                  Weak_impl,
+                  Weak_intf
+  BuildTools:     ocamlbuild
+
+
+# Examples
+
+Executable buffer_ex
+  Path:           examples
+  MainIs:         buffer_ex.ml
+  BuildDepends:   res
+  Install:        false
+  CompiledObject: best
+  BuildTools:     ocamlbuild
+
+Executable defstrat
+  Path:           examples
+  MainIs:         defstrat.ml
+  BuildDepends:   res
+  Install:        false
+  CompiledObject: best
+  BuildTools:     ocamlbuild
+
+Executable stupid_ga
+  Path:           examples
+  MainIs:         stupid_ga.ml
+  BuildDepends:   res
+  Install:        false
+  CompiledObject: best
+  BuildTools:     ocamlbuild
+
+Executable weak_ex
+  Path:           examples
+  MainIs:         weak_ex.ml
+  BuildDepends:   res
+  Install:        false
+  CompiledObject: best
+  BuildTools:     ocamlbuild
+
+#
+
+Document API
+  Title:                API reference for RES
+  Type:                 OCamlbuild (0.3)
+  InstallDir:           $docdir/api
+  BuildTools:           ocamldoc, ocamlbuild
+  XOCamlbuildPath:      .
+  XOCamlbuildLibraries: res
+
+SourceRepository trunk
+  Type:       hg
+  Location:   ssh://hg@bitbucket.org/mmottl/res
+  Browser:    https://bitbucket.org/mmottl/res
+  Tag:        release-$(pkg_version)

@@ -1,3 +1,4 @@
-(^|/)\.bzr($|/)
-(^|/)\.hg($|/)
-(^|/)\.hgtags($|/)
+^.*\.swp$
+^setup\.(log|data)$
+^_build/.*$
+^.*\.native$
