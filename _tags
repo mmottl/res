@@ -25,3 +25,4 @@
 <examples/weak_ex.{native,byte}>: use_res
 <examples/*.ml{,i}>: use_res
 # OASIS_STOP
+<**/*.ml{,i}>: warn_A, warn_e, warn_r, annot
