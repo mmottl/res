@@ -17,6 +17,8 @@ Homepage:         https://bitbucket.org/mmottl/res
 Plugins:          META (0.3), StdFiles (0.3), DevFiles (0.3)
 XStdFilesREADME:  false
 
+BuildTools:       ocamldoc, ocamlbuild
+
 Library res
   Path:           lib
   FindlibName:    res
@@ -28,7 +30,6 @@ Library res
                   Strat,
                   Weak_impl,
                   Weak_intf
-  BuildTools:     ocamlbuild
 
 
 # Examples
@@ -39,7 +40,6 @@ Executable buffer_ex
   BuildDepends:   res
   Install:        false
   CompiledObject: best
-  BuildTools:     ocamlbuild
 
 Executable defstrat
   Path:           examples
@@ -47,7 +47,6 @@ Executable defstrat
   BuildDepends:   res
   Install:        false
   CompiledObject: best
-  BuildTools:     ocamlbuild
 
 Executable stupid_ga
   Path:           examples
@@ -55,7 +54,6 @@ Executable stupid_ga
   BuildDepends:   res
   Install:        false
   CompiledObject: best
-  BuildTools:     ocamlbuild
 
 Executable weak_ex
   Path:           examples
@@ -63,7 +61,6 @@ Executable weak_ex
   BuildDepends:   res
   Install:        false
   CompiledObject: best
-  BuildTools:     ocamlbuild
 
 #
 
@@ -71,7 +68,6 @@ Document API
   Title:                API reference for RES
   Type:                 OCamlbuild (0.3)
   InstallDir:           $docdir/api
-  BuildTools:           ocamldoc, ocamlbuild
   XOCamlbuildPath:      .
   XOCamlbuildLibraries: res
 
