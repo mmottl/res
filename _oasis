@@ -34,9 +34,14 @@ Library res
 
 # Examples
 
+Flag examples
+  Description:    Build examples
+  Default:        true
+
 Executable buffer_ex
   Path:           examples
   MainIs:         buffer_ex.ml
+  Build$:         flag(examples)
   BuildDepends:   res
   Install:        false
   CompiledObject: best
@@ -44,6 +49,7 @@ Executable buffer_ex
 Executable defstrat
   Path:           examples
   MainIs:         defstrat.ml
+  Build$:         flag(examples)
   BuildDepends:   res
   Install:        false
   CompiledObject: best
@@ -51,6 +57,7 @@ Executable defstrat
 Executable stupid_ga
   Path:           examples
   MainIs:         stupid_ga.ml
+  Build$:         flag(examples)
   BuildDepends:   res
   Install:        false
   CompiledObject: best
@@ -58,6 +65,7 @@ Executable stupid_ga
 Executable weak_ex
   Path:           examples
   MainIs:         weak_ex.ml
+  Build$:         flag(examples)
   BuildDepends:   res
   Install:        false
   CompiledObject: best
