@@ -78,6 +78,9 @@ Features
 Usage
 -----
 
+The API is fully documented and can be built as HTML using `make doc`.
+It is also available [online](http://mmottl.bitbucket.org/projects/res/api/).
+
 The preparameterized modules (default strategy) and the functors for mapping
 strategy-implementations to this kind of modules are contained and documented
 in file `lib/res.mli`.
