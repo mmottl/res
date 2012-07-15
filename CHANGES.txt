@@ -1,3 +1,11 @@
+2012-07-15:  New major release version 4.0.0:
+
+               * Upgraded to OCaml 4.00
+               * Switched to Oasis for packaging
+               * Switched to OCamlBuild for the build process
+               * Rewrote README in Markdown
+               * Added stricter compilation flags
+
 2009-06-01: Robustified implementation to avoid internal use of Obg.magic.
 
 2008-09-16: Changed strategy API to greatly improve performance of
