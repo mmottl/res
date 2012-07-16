@@ -7,7 +7,7 @@ What is RES?
 ------------
 
 This OCaml-library consists of a set of modules which implement automatically
-resizing (= reallocating) datastructures that consume a contiguous part
+resizing (= reallocating) data structures that consume a contiguous part
 of memory.  This allows appending and removing of elements to/from arrays
 (both boxed and unboxed), strings (buffers), bit strings and weak arrays
 while still maintaining fast constant-time access to elements.
@@ -22,7 +22,7 @@ Features
     strings) is often a prerequisite for short execution times of programs.
 
     Still, operations like adding and/or removing elements to/from the
-    end of such datastructures are often needed.  Unfortunately, having
+    end of such data structures are often needed.  Unfortunately, having
     both properties at the same time sometimes requires reallocating this
     contiguous part of memory.
 
@@ -40,20 +40,20 @@ Features
     For example, the programmer might know that a consecutive series of
     operations will alternately add and remove large batches of elements.
     In such a case it would be wise to keep a high reserve of available slots
-    in the datastructure, because otherwise it will resize very often during
+    in the data structure, because otherwise it will resize very often during
     this procedure which requires a significant amount of time.
 
     By raising a corresponding threshold in appropriate places at runtime,
-    programmers can fine-tune the behaviour of e.g. their buffers for optimal
+    programmers can fine-tune the behavior of e.g. their buffers for optimal
     performance and set this parameter back later to save memory.
 
   * Because optimal reallocation strategies may be quite complex,
     it was also a design goal to have users supply their own ones (if
     required).
 
-    By using functors users can parameterize these datastructures with their
-    own reallocation strategies, giving them even more control over how and
-    when reallocations are triggered.
+    By using functors users can parameterize these data structures with
+    their own reallocation strategies, giving them even more control over
+    how and when reallocations are triggered.
 
   * Users may want to add support for additional low-level implementations
     that require reallocations.  In this case, too, it is fairly easy to
@@ -64,7 +64,7 @@ Features
     implementation.
 
     All the interfaces of the corresponding low-level implementations of
-    datastructures (e.g. array, string) are fully supported and have been
+    data structures (e.g. array, string) are fully supported and have been
     extended with further functionality.  There is even a new buffer module
     which can be used in every context of the standard one.
 
@@ -157,7 +157,7 @@ Then set the type:
     :::ocaml
     type 'a array = 'a Array.t
 
-If you create standard arrays with the builtin syntax, change lines like:
+If you create standard arrays with the built-in syntax, change lines like:
 
     :::ocaml
     let ar = [| 1; 2; 3; 4 |] in
