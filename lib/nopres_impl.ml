@@ -217,7 +217,7 @@ module Make (S : Strat.T) (Impl : Implementation) = struct
 
   let unsafe_fill ({ ar = ar } as ra) ofs len x =
     let last = ofs + len - 1 in
-    guarantee_ix ra (max last ra.vlix);
+    maybe_grow_ix ra (max last ra.vlix);
     for i = ofs to last do Impl.unsafe_set ar i x done
 
   let fill ra ofs len x =

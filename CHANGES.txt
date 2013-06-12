@@ -1,3 +1,6 @@
+2013-06-12:  Fixed a bug in the fill functions that made them not behave
+             according to specification when filling past the end.
+
 2012-07-20:  Downgraded findlib version requirement to support the Debian
              testing branch.
 

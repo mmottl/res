@@ -59,13 +59,10 @@ module Make (S : Strat.T) = struct
   let set ra n =
     if n > ra.vlix || n < 0 then invalid_arg "set" else unsafe_set ra n
 
-  let dummy_loc = 0
-  let no_obj () = Obj.magic dummy_loc
-
   let creator = Weak.create
 
   let screate_fresh strategy n =
-    let res = {ar = no_obj (); vlix = n - 1; strategy = strategy} in
+    let res = {ar = creator 0; vlix = n - 1; strategy = strategy} in
     res.ar <- creator (Strategy.grow strategy n);
     res
 
@@ -75,7 +72,7 @@ module Make (S : Strat.T) = struct
     {ar = creator (length ra); vlix = ra.vlix; strategy = ra.strategy}
 
   let sempty strategy =
-    let res = {ar = no_obj (); vlix = -1; strategy = strategy} in
+    let res = {ar = creator 0; vlix = -1; strategy = strategy} in
     res.ar <- creator (Strategy.grow strategy 0);
     res
 
@@ -209,7 +206,7 @@ module Make (S : Strat.T) = struct
 
   let unsafe_fill ra ofs len x =
     let last = ofs + len - 1 in
-    guarantee_ix ra (max last ra.vlix);
+    maybe_grow_ix ra (max last ra.vlix);
     for i = ofs to last do unsafe_set ra i x done
 
   let fill ra ofs len x =
