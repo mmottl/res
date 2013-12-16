@@ -1,7 +1,7 @@
 # OASIS_START
-# DO NOT EDIT (digest: 6be96645fdcc7ac3cbe71a3ad5893afc)
-# Ignore VCS directories, you can use the same kind of rule outside 
-# OASIS_START/STOP if you want to exclude directories that contains 
+# DO NOT EDIT (digest: 9c23990e708cc1d0737f22c6ba3ef665)
+# Ignore VCS directories, you can use the same kind of rule outside
+# OASIS_START/STOP if you want to exclude directories that contains
 # useless stuff for the build process
 <**/.svn>: -traverse
 <**/.svn>: not_hygienic
@@ -25,4 +25,8 @@
 <examples/weak_ex.{native,byte}>: use_res
 <examples/*.ml{,i}>: use_res
 # OASIS_STOP
-<**/*.ml{,i}>: warn_A, warn_e, warn_r, annot
+
+true: -traverse
+<{lib,examples}/**>: traverse
+
+<**/*.ml{,i}>: warn(Aer-44), strict_sequence, annot
