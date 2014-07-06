@@ -1,0 +1,98 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<link rel="stylesheet" href="style.css" type="text/css">
+<meta content="text/html; charset=iso-8859-1" http-equiv="Content-Type">
+<link rel="Start" href="index.html">
+<link rel="previous" href="Pres_intf.html">
+<link rel="next" href="Strat.html">
+<link rel="Up" href="index.html">
+<link title="Index of types" rel=Appendix href="index_types.html">
+<link title="Index of values" rel=Appendix href="index_values.html">
+<link title="Index of modules" rel=Appendix href="index_modules.html">
+<link title="Index of module types" rel=Appendix href="index_module_types.html">
+<link title="Nopres_impl" rel="Chapter" href="Nopres_impl.html">
+<link title="Nopres_intf" rel="Chapter" href="Nopres_intf.html">
+<link title="Pres_impl" rel="Chapter" href="Pres_impl.html">
+<link title="Pres_intf" rel="Chapter" href="Pres_intf.html">
+<link title="Res" rel="Chapter" href="Res.html">
+<link title="Strat" rel="Chapter" href="Strat.html">
+<link title="Weak_impl" rel="Chapter" href="Weak_impl.html">
+<link title="Weak_intf" rel="Chapter" href="Weak_intf.html"><link title="Default strategies" rel="Section" href="#6_Defaultstrategies">
+<link title="Default instantiation of standard resizable datastructures" rel="Section" href="#6_Defaultinstantiationofstandardresizabledatastructures">
+<link title="Functors for creating standard resizable datastructures from
+       strategies" rel="Section" href="#6_Functorsforcreatingstandardresizabledatastructuresfromstrategies">
+<title>Res</title>
+</head>
+<body>
+<div class="navbar"><a class="pre" href="Pres_intf.html" title="Pres_intf">Previous</a>
+&nbsp;<a class="up" href="index.html" title="Index">Up</a>
+&nbsp;<a class="post" href="Strat.html" title="Strat">Next</a>
+</div>
+<h1>Module <a href="type_Res.html">Res</a></h1>
+
+<pre><span class="keyword">module</span> Res: <code class="code">sig</code> <a href="Res.html">..</a> <code class="code">end</code></pre><div class="info module top">
+Global module for resizable datastructures and default implementations<br>
+</div>
+<hr width="100%">
+<br>
+<h6 id="6_Defaultstrategies">Default strategies</h6><br>
+
+<pre><span class="keyword">module</span> <a href="Res.DefStrat.html">DefStrat</a>: <code class="type"><a href="Strat.T.html">Strat.T</a></code><code class="type">  with type t = float * float * int</code></pre><div class="info">
+Default strategy for resizable datastructures
+</div>
+
+<pre><span class="keyword">module</span> <a href="Res.BitDefStrat.html">BitDefStrat</a>: <code class="type"><a href="Strat.T.html">Strat.T</a></code><code class="type">  with type t = float * float * int</code></pre><div class="info">
+Same as <code class="code">DefStrat</code>, but the minimum size is 1024 elements (bits).
+</div>
+<br>
+<h6 id="6_Defaultinstantiationofstandardresizabledatastructures">Default instantiation of standard resizable datastructures</h6><br>
+
+<pre><span class="keyword">module</span> <a href="Res.Array.html">Array</a>: <code class="type"><a href="Pres_intf.T.html">Pres_intf.T</a></code><code class="type">  with module Strategy = DefStrat</code></pre><div class="info">
+Resizable parameterized array using the default reallocation strategy.
+</div>
+
+<pre><span class="keyword">module</span> <a href="Res.Floats.html">Floats</a>: <code class="type"><a href="Nopres_intf.T.html">Nopres_intf.T</a></code><code class="type">  with module Strategy = DefStrat and type el = float</code></pre><div class="info">
+Resizable float array using the default reallocation strategy.
+</div>
+
+<pre><span class="keyword">module</span> <a href="Res.Bits.html">Bits</a>: <code class="type"><a href="Nopres_intf.T.html">Nopres_intf.T</a></code><code class="type">  with module Strategy = BitDefStrat and type el = bool</code></pre><div class="info">
+Resizable bit vector using the default reallocation strategy.
+</div>
+
+<pre><span class="keyword">module</span> <a href="Res.Weak.html">Weak</a>: <code class="type"><a href="Weak_intf.T.html">Weak_intf.T</a></code><code class="type">  with module Strategy = DefStrat</code></pre><div class="info">
+Resizable weak array using the default reallocation strategy.
+</div>
+
+<pre><span class="keyword">module</span> <a href="Res.Buffer.html">Buffer</a>: <code class="type"><a href="Nopres_intf.Buffer.html">Nopres_intf.Buffer</a></code><code class="type">  with module Strategy = DefStrat and type el = char</code></pre><div class="info">
+Resizable buffer using the default reallocation strategy.
+</div>
+<br>
+<h6 id="6_Functorsforcreatingstandardresizabledatastructuresfromstrategies">Functors for creating standard resizable datastructures from
+       strategies</h6><br>
+
+<pre><span class="keyword">module</span> <a href="Res.MakeArray.html">MakeArray</a>: <div class="sig_block"><code class="code">functor (</code><code class="code">S</code><code class="code"> : </code><code class="type"><a href="Strat.T.html">Strat.T</a></code><code class="code">) -&gt; </code><code class="type"><a href="Pres_intf.T.html">Pres_intf.T</a></code><code class="type">  with module Strategy = S</code></div></pre><div class="info">
+Functor that creates resizable parameterized arrays from reallocation
+    strategies.
+</div>
+
+<pre><span class="keyword">module</span> <a href="Res.MakeFloats.html">MakeFloats</a>: <div class="sig_block"><code class="code">functor (</code><code class="code">S</code><code class="code"> : </code><code class="type"><a href="Strat.T.html">Strat.T</a></code><code class="code">) -&gt; </code><code class="type"><a href="Nopres_intf.T.html">Nopres_intf.T</a></code><code class="type">  with module Strategy = S and type el = float</code></div></pre><div class="info">
+Functor that creates resizable float arrays from reallocation
+    strategies.
+</div>
+
+<pre><span class="keyword">module</span> <a href="Res.MakeBits.html">MakeBits</a>: <div class="sig_block"><code class="code">functor (</code><code class="code">S</code><code class="code"> : </code><code class="type"><a href="Strat.T.html">Strat.T</a></code><code class="code">) -&gt; </code><code class="type"><a href="Nopres_intf.T.html">Nopres_intf.T</a></code><code class="type">  with module Strategy = S and type el = bool</code></div></pre><div class="info">
+Functor that creates resizable bit vectors from reallocation
+    strategies.
+</div>
+
+<pre><span class="keyword">module</span> <a href="Res.MakeWeak.html">MakeWeak</a>: <div class="sig_block"><code class="code">functor (</code><code class="code">S</code><code class="code"> : </code><code class="type"><a href="Strat.T.html">Strat.T</a></code><code class="code">) -&gt; </code><code class="type"><a href="Weak_intf.T.html">Weak_intf.T</a></code><code class="type">  with module Strategy = S</code></div></pre><div class="info">
+Functor that creates resizable weak arrays from reallocation
+    strategies.
+</div>
+
+<pre><span class="keyword">module</span> <a href="Res.MakeBuffer.html">MakeBuffer</a>: <div class="sig_block"><code class="code">functor (</code><code class="code">S</code><code class="code"> : </code><code class="type"><a href="Strat.T.html">Strat.T</a></code><code class="code">) -&gt; </code><code class="type"><a href="Nopres_intf.Buffer.html">Nopres_intf.Buffer</a></code><code class="type">  with module Strategy = S and type el = char</code></div></pre><div class="info">
+Functor that creates resizable buffers (=string arrays) from
+    reallocation strategies.
+</div>
+</body></html>

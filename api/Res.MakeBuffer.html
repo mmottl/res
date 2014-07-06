@@ -1,0 +1,119 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<link rel="stylesheet" href="style.css" type="text/css">
+<meta content="text/html; charset=iso-8859-1" http-equiv="Content-Type">
+<link rel="Start" href="index.html">
+<link rel="previous" href="Res.MakeWeak.html">
+<link rel="Up" href="Res.html">
+<link title="Index of types" rel=Appendix href="index_types.html">
+<link title="Index of values" rel=Appendix href="index_values.html">
+<link title="Index of modules" rel=Appendix href="index_modules.html">
+<link title="Index of module types" rel=Appendix href="index_module_types.html">
+<link title="Nopres_impl" rel="Chapter" href="Nopres_impl.html">
+<link title="Nopres_intf" rel="Chapter" href="Nopres_intf.html">
+<link title="Pres_impl" rel="Chapter" href="Pres_impl.html">
+<link title="Pres_intf" rel="Chapter" href="Pres_intf.html">
+<link title="Res" rel="Chapter" href="Res.html">
+<link title="Strat" rel="Chapter" href="Strat.html">
+<link title="Weak_impl" rel="Chapter" href="Weak_impl.html">
+<link title="Weak_intf" rel="Chapter" href="Weak_intf.html"><link title="String conversions" rel="Section" href="#6_Stringconversions">
+<link title="Functions found in the standard Buffer-module" rel="Section" href="#6_FunctionsfoundinthestandardBuffermodule">
+<link title="Additional buffer functions" rel="Section" href="#6_Additionalbufferfunctions">
+<title>Res.MakeBuffer</title>
+</head>
+<body>
+<div class="navbar"><a class="pre" href="Res.MakeWeak.html" title="Res.MakeWeak">Previous</a>
+&nbsp;<a class="up" href="Res.html" title="Res">Up</a>
+&nbsp;</div>
+<h1>Functor <a href="type_Res.MakeBuffer.html">Res.MakeBuffer</a></h1>
+
+<pre><span class="keyword">module</span> MakeBuffer: <div class="sig_block"><code class="code">functor (</code><code class="code">S</code><code class="code"> : </code><code class="type"><a href="Strat.T.html">Strat.T</a></code><code class="code">) -&gt; </code><code class="type"><a href="Nopres_intf.Buffer.html">Nopres_intf.Buffer</a></code><code class="type">  with module Strategy = S and type el = char</code></div></pre><div class="info module top">
+Functor that creates resizable buffers (=string arrays) from
+    reallocation strategies.<br>
+</div>
+<table border="0" cellpadding="3" width="100%">
+<tr>
+<td align="left" valign="top" width="1%%"><b>Parameters: </b></td>
+<td>
+<table class="paramstable">
+<tr>
+<td align="center" valign="top" width="15%">
+<code>S</code></td>
+<td align="center" valign="top">:</td>
+<td><code class="type"><a href="Strat.T.html">Strat.T</a></code>
+</table>
+</td>
+</tr>
+</table>
+<hr width="100%">
+
+<pre><span class="keyword">include</span> <a href="Nopres_intf.T.html">Nopres_intf.T</a></pre>
+<br>
+Includes all functions that exist in non-parameterized arrays.<br>
+<br>
+<h6 id="6_Stringconversions">String conversions</h6><br>
+
+<pre><span id="VALsof_string"><span class="keyword">val</span> sof_string</span> : <code class="type">strategy -> string -> t</code></pre><div class="info ">
+<code class="code">sof_string s ar</code> converts a string to a resizable buffer
+      using strategy <code class="code">s</code>.<br>
+</div>
+
+<pre><span id="VALof_string"><span class="keyword">val</span> of_string</span> : <code class="type">string -> t</code></pre><div class="info ">
+<code class="code">of_string ar</code> converts a string to a resizable buffer using
+      the default strategy.<br>
+</div>
+<br>
+<h6 id="6_FunctionsfoundinthestandardBuffermodule">Functions found in the standard <code class="code">Buffer</code>-module</h6><br>
+<br>
+Note that the function <code class="code">create n</code> ignores the parameter <code class="code">n</code> and
+      uses the default strategy instead. You can supply a different
+      strategy with <code class="code">creates s n</code> as described above.<br>
+
+<pre><span id="VALcontents"><span class="keyword">val</span> contents</span> : <code class="type">t -> string</code></pre><div class="info ">
+<code class="code">contents b</code><br>
+<b>Returns</b> a copy of the current contents of the
+      buffer <code class="code">b</code>.<br>
+</div>
+
+<pre><span id="VALreset"><span class="keyword">val</span> reset</span> : <code class="type">t -> unit</code></pre><div class="info ">
+<code class="code">reset b</code> just clears the buffer, possibly resizing it.<br>
+</div>
+
+<pre><span id="VALadd_char"><span class="keyword">val</span> add_char</span> : <code class="type">t -> char -> unit</code></pre><div class="info ">
+<code class="code">add_char b c</code> appends the character <code class="code">c</code> at the end of
+      the buffer <code class="code">b</code>.<br>
+</div>
+
+<pre><span id="VALadd_string"><span class="keyword">val</span> add_string</span> : <code class="type">t -> string -> unit</code></pre><div class="info ">
+<code class="code">add_string b s</code> appends the string <code class="code">s</code> at the end of
+      the buffer <code class="code">b</code>.<br>
+</div>
+
+<pre><span id="VALadd_substring"><span class="keyword">val</span> add_substring</span> : <code class="type">t -> string -> int -> int -> unit</code></pre><div class="info ">
+<code class="code">add_substring b s ofs len</code> takes <code class="code">len</code> characters from offset
+      <code class="code">ofs</code> in string <code class="code">s</code> and appends them at the end of the buffer
+      <code class="code">b</code>.<br>
+</div>
+
+<pre><span id="VALadd_buffer"><span class="keyword">val</span> add_buffer</span> : <code class="type">t -> t -> unit</code></pre><div class="info ">
+<code class="code">add_buffer b1 b2</code> appends the current contents of buffer <code class="code">b2</code>
+      at the end of buffer <code class="code">b1</code>. <code class="code">b2</code> is not modified.<br>
+</div>
+
+<pre><span id="VALadd_channel"><span class="keyword">val</span> add_channel</span> : <code class="type">t -> Pervasives.in_channel -> int -> unit</code></pre><div class="info ">
+<code class="code">add_channel b ic n</code> reads exactly <code class="code">n</code> character from the
+      input channel <code class="code">ic</code> and stores them at the end of buffer <code class="code">b</code>.<br>
+<b>Raises</b> <code>End_of_file</code> if the channel contains fewer than <code class="code">n</code>
+      characters.<br>
+</div>
+
+<pre><span id="VALoutput_buffer"><span class="keyword">val</span> output_buffer</span> : <code class="type">Pervasives.out_channel -> t -> unit</code></pre><div class="info ">
+<code class="code">output_buffer oc b</code> writes the current contents of buffer <code class="code">b</code>
+      on the output channel <code class="code">oc</code>.<br>
+</div>
+<br>
+<h6 id="6_Additionalbufferfunctions">Additional buffer functions</h6><br>
+
+<pre><span id="VALadd_full_channel"><span class="keyword">val</span> add_full_channel</span> : <code class="type">t -> Pervasives.in_channel -> unit</code></pre>
+<pre><span id="VALadd_full_channel_f"><span class="keyword">val</span> add_full_channel_f</span> : <code class="type">t -> Pervasives.in_channel -> int -> (int -> int) -> unit</code></pre></body></html>

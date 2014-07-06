@@ -1,0 +1,412 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<link rel="stylesheet" href="style.css" type="text/css">
+<meta content="text/html; charset=iso-8859-1" http-equiv="Content-Type">
+<link rel="Start" href="index.html">
+<link rel="previous" href="Res.Bits.html">
+<link rel="next" href="Res.Buffer.html">
+<link rel="Up" href="Res.html">
+<link title="Index of types" rel=Appendix href="index_types.html">
+<link title="Index of values" rel=Appendix href="index_values.html">
+<link title="Index of modules" rel=Appendix href="index_modules.html">
+<link title="Index of module types" rel=Appendix href="index_module_types.html">
+<link title="Nopres_impl" rel="Chapter" href="Nopres_impl.html">
+<link title="Nopres_intf" rel="Chapter" href="Nopres_intf.html">
+<link title="Pres_impl" rel="Chapter" href="Pres_impl.html">
+<link title="Pres_intf" rel="Chapter" href="Pres_intf.html">
+<link title="Res" rel="Chapter" href="Res.html">
+<link title="Strat" rel="Chapter" href="Strat.html">
+<link title="Weak_impl" rel="Chapter" href="Weak_impl.html">
+<link title="Weak_intf" rel="Chapter" href="Weak_intf.html"><link title="Signatures and types" rel="Section" href="#6_Signaturesandtypes">
+<link title="Index and length information" rel="Section" href="#6_Indexandlengthinformation">
+<link title="Getting, setting and checking" rel="Section" href="#6_Gettingsettingandchecking">
+<link title="Creation of resizable arrays" rel="Section" href="#6_Creationofresizablearrays">
+<link title="Strategy handling" rel="Section" href="#6_Strategyhandling">
+<link title="Copying, blitting and range extraction" rel="Section" href="#6_Copyingblittingandrangeextraction">
+<link title="Combining resizable arrays" rel="Section" href="#6_Combiningresizablearrays">
+<link title="Adding and removing elements" rel="Section" href="#6_Addingandremovingelements">
+<link title="Swapping" rel="Section" href="#6_Swapping">
+<link title="Standard conversions" rel="Section" href="#6_Standardconversions">
+<link title="List conversions" rel="Section" href="#6_Listconversions">
+<link title="Iterators" rel="Section" href="#6_Iterators">
+<link title="Scanning of resizable arrays" rel="Section" href="#6_Scanningofresizablearrays">
+<link title="Searching of resizable arrays" rel="Section" href="#6_Searchingofresizablearrays">
+<link title="UNSAFE STUFF - USE WITH CAUTION!" rel="Section" href="#6_UNSAFESTUFFUSEWITHCAUTION">
+<title>Res.Weak</title>
+</head>
+<body>
+<div class="navbar"><a class="pre" href="Res.Bits.html" title="Res.Bits">Previous</a>
+&nbsp;<a class="up" href="Res.html" title="Res">Up</a>
+&nbsp;<a class="post" href="Res.Buffer.html" title="Res.Buffer">Next</a>
+</div>
+<h1>Module <a href="type_Res.Weak.html">Res.Weak</a></h1>
+
+<pre><span class="keyword">module</span> Weak: <code class="type"><a href="Weak_intf.T.html">Weak_intf.T</a></code><code class="type">  with module Strategy = DefStrat</code></pre><div class="info module top">
+Resizable weak array using the default reallocation strategy.<br>
+</div>
+<hr width="100%">
+<br>
+<h6 id="6_Signaturesandtypes">Signatures and types</h6><br>
+
+<pre><span class="keyword">module</span> <a href="Weak_intf.T.Strategy.html">Strategy</a>: <code class="type"><a href="Strat.T.html">Strat.T</a></code><code class="type"> </code></pre><div class="info">
+Module implementing the reallocation strategy
+</div>
+
+<pre><span id="TYPEstrategy"><span class="keyword">type</span> <code class="type"></code>strategy</span> = <code class="type">Strategy.t</code> </pre>
+<div class="info ">
+Type of reallocation strategy<br>
+</div>
+
+
+<pre><span id="TYPEt"><span class="keyword">type</span> <code class="type">'a</code> t</span> </pre>
+<div class="info ">
+Type of parameterized resizable arrays<br>
+</div>
+
+<br>
+<h6 id="6_Indexandlengthinformation">Index and length information</h6><br>
+
+<pre><span id="VALlength"><span class="keyword">val</span> length</span> : <code class="type">'a <a href="Weak_intf.T.html#TYPEt">t</a> -> int</code></pre><div class="info ">
+<code class="code">length ra</code><br>
+<b>Returns</b> (virtual) length of resizable array <code class="code">ra</code>
+      excluding the reserved space.<br>
+</div>
+
+<pre><span id="VALlix"><span class="keyword">val</span> lix</span> : <code class="type">'a <a href="Weak_intf.T.html#TYPEt">t</a> -> int</code></pre><div class="info ">
+<code class="code">lix ra</code><br>
+<b>Returns</b> (virtual) last index of resizable array <code class="code">ra</code>
+      excluding the reserved space.<br>
+</div>
+
+<pre><span id="VALreal_length"><span class="keyword">val</span> real_length</span> : <code class="type">'a <a href="Weak_intf.T.html#TYPEt">t</a> -> int</code></pre><div class="info ">
+<code class="code">real_length ra</code><br>
+<b>Returns</b> (real) length of resizable array <code class="code">ra</code>
+      including the reserved space.<br>
+</div>
+
+<pre><span id="VALreal_lix"><span class="keyword">val</span> real_lix</span> : <code class="type">'a <a href="Weak_intf.T.html#TYPEt">t</a> -> int</code></pre><div class="info ">
+<code class="code">real_lix ra</code><br>
+<b>Returns</b> (real) last index of resizable array <code class="code">ra</code>
+      including the reserved space.<br>
+</div>
+<br>
+<h6 id="6_Gettingsettingandchecking">Getting, setting and checking</h6><br>
+
+<pre><span id="VALget"><span class="keyword">val</span> get</span> : <code class="type">'a <a href="Weak_intf.T.html#TYPEt">t</a> -> int -> 'a option</code></pre><div class="info ">
+<code class="code">get ra n</code><br>
+<b>Raises</b> <code>Invalid_argument</code> if index out of bounds.<br>
+<b>Returns</b> the <code class="code">n</code>th element of <code class="code">ra</code>.<br>
+</div>
+
+<pre><span id="VALget_copy"><span class="keyword">val</span> get_copy</span> : <code class="type">'a <a href="Weak_intf.T.html#TYPEt">t</a> -> int -> 'a option</code></pre><div class="info ">
+<code class="code">get_copy ra n</code> see documentation of module <code class="code">Weak</code> in the standard
+      distribution.<br>
+</div>
+
+<pre><span id="VALcheck"><span class="keyword">val</span> check</span> : <code class="type">'a <a href="Weak_intf.T.html#TYPEt">t</a> -> int -> bool</code></pre><div class="info ">
+<code class="code">check ra n</code><br>
+<b>Returns</b> <code class="code">true</code> if the <code class="code">n</code>th cell of <code class="code">ra</code> is
+      full, <code class="code">false</code> if it is empty.  Note that even if <code class="code">check ar n</code>
+      returns <code class="code">true</code>, a subsequent <a href="Weak_intf.T.html#VALget"><code class="code">Weak_intf.T.get</code></a><code class="code"> ar n</code> can return <code class="code">None</code>.<br>
+</div>
+
+<pre><span id="VALset"><span class="keyword">val</span> set</span> : <code class="type">'a <a href="Weak_intf.T.html#TYPEt">t</a> -> int -> 'a option -> unit</code></pre><div class="info ">
+<code class="code">set ra n</code> sets the <code class="code">n</code>th element of <code class="code">ra</code>.<br>
+<b>Raises</b> <code>Invalid_argument</code> if index out of bounds.<br>
+</div>
+<br>
+<h6 id="6_Creationofresizablearrays">Creation of resizable arrays</h6><br>
+
+<pre><span id="VALsempty"><span class="keyword">val</span> sempty</span> : <code class="type"><a href="Weak_intf.T.html#TYPEstrategy">strategy</a> -> 'a <a href="Weak_intf.T.html#TYPEt">t</a></code></pre><div class="info ">
+<code class="code">sempty s</code><br>
+<b>Returns</b> an empty resizable array using strategy <code class="code">s</code>.<br>
+</div>
+
+<pre><span id="VALempty"><span class="keyword">val</span> empty</span> : <code class="type">unit -> 'a <a href="Weak_intf.T.html#TYPEt">t</a></code></pre><div class="info ">
+<code class="code">empty ()</code> same as <code class="code">sempty</code> but uses default strategy.<br>
+</div>
+
+<pre><span id="VALscreate"><span class="keyword">val</span> screate</span> : <code class="type"><a href="Weak_intf.T.html#TYPEstrategy">strategy</a> -> int -> 'a <a href="Weak_intf.T.html#TYPEt">t</a></code></pre><div class="info ">
+<code class="code">screate s n el</code><br>
+<b>Returns</b> a resizable array of length <code class="code">n</code>
+      using strategy <code class="code">s</code>.<br>
+</div>
+
+<pre><span id="VALcreate"><span class="keyword">val</span> create</span> : <code class="type">int -> 'a <a href="Weak_intf.T.html#TYPEt">t</a></code></pre><div class="info ">
+<code class="code">create n</code> same as <code class="code">screate</code> but uses default strategy.<br>
+</div>
+
+<pre><span id="VALsinit"><span class="keyword">val</span> sinit</span> : <code class="type"><a href="Weak_intf.T.html#TYPEstrategy">strategy</a> -> int -> (int -> 'a option) -> 'a <a href="Weak_intf.T.html#TYPEt">t</a></code></pre><div class="info ">
+<code class="code">sinit s n f</code><br>
+<b>Returns</b> an array of length <code class="code">n</code> containing
+      elements that were created by applying function <code class="code">f</code> to the index,
+      using strategy <code class="code">s</code>.<br>
+</div>
+
+<pre><span id="VALinit"><span class="keyword">val</span> init</span> : <code class="type">int -> (int -> 'a option) -> 'a <a href="Weak_intf.T.html#TYPEt">t</a></code></pre><div class="info ">
+<code class="code">init n f</code> sames as <code class="code">sinit</code> but uses default strategy.<br>
+</div>
+<br>
+<h6 id="6_Strategyhandling">Strategy handling</h6><br>
+
+<pre><span id="VALget_strategy"><span class="keyword">val</span> get_strategy</span> : <code class="type">'a <a href="Weak_intf.T.html#TYPEt">t</a> -> <a href="Weak_intf.T.html#TYPEstrategy">strategy</a></code></pre><div class="info ">
+<code class="code">get_strategy ra</code><br>
+<b>Returns</b> the reallocation strategy used by
+      resizable array <code class="code">ra</code>.<br>
+</div>
+
+<pre><span id="VALset_strategy"><span class="keyword">val</span> set_strategy</span> : <code class="type">'a <a href="Weak_intf.T.html#TYPEt">t</a> -> <a href="Weak_intf.T.html#TYPEstrategy">strategy</a> -> unit</code></pre><div class="info ">
+<code class="code">set_strategy ra s</code> sets the reallocation strategy of
+      resizable array <code class="code">ra</code> to <code class="code">s</code>, possibly causing an immediate
+      reallocation.<br>
+</div>
+
+<pre><span id="VALput_strategy"><span class="keyword">val</span> put_strategy</span> : <code class="type">'a <a href="Weak_intf.T.html#TYPEt">t</a> -> <a href="Weak_intf.T.html#TYPEstrategy">strategy</a> -> unit</code></pre><div class="info ">
+<code class="code">put_strategy ra s</code> sets the reallocation strategy of
+      resizable array <code class="code">ra</code> to <code class="code">s</code>. Reallocation is only done at later
+      changes in size.<br>
+</div>
+
+<pre><span id="VALenforce_strategy"><span class="keyword">val</span> enforce_strategy</span> : <code class="type">'a <a href="Weak_intf.T.html#TYPEt">t</a> -> unit</code></pre><div class="info ">
+<code class="code">enforce_strategy ra</code> forces a reallocation if necessary
+      (e.g. after a <code class="code">put_strategy</code>.<br>
+</div>
+<br>
+<h6 id="6_Copyingblittingandrangeextraction">Copying, blitting and range extraction</h6><br>
+
+<pre><span id="VALcopy"><span class="keyword">val</span> copy</span> : <code class="type">'a <a href="Weak_intf.T.html#TYPEt">t</a> -> 'a <a href="Weak_intf.T.html#TYPEt">t</a></code></pre><div class="info ">
+<code class="code">copy ra</code><br>
+<b>Returns</b> a copy of resizable array <code class="code">ra</code>. The two
+      arrays share the same strategy!<br>
+</div>
+
+<pre><span id="VALsub"><span class="keyword">val</span> sub</span> : <code class="type">'a <a href="Weak_intf.T.html#TYPEt">t</a> -> int -> int -> 'a <a href="Weak_intf.T.html#TYPEt">t</a></code></pre><div class="info ">
+<code class="code">sub ra ofs len</code><br>
+<b>Raises</b> <code>Invalid_argument</code> if parameters do not denote a correct
+      subarray.<br>
+<b>Returns</b> a resizable subarray of length <code class="code">len</code>
+      from resizable array <code class="code">ra</code> starting at offset <code class="code">ofs</code> using the
+      default strategy.<br>
+</div>
+
+<pre><span id="VALfill"><span class="keyword">val</span> fill</span> : <code class="type">'a <a href="Weak_intf.T.html#TYPEt">t</a> -> int -> int -> 'a option -> unit</code></pre><div class="info ">
+<code class="code">fill ra ofs len el</code> fills resizable array <code class="code">ra</code> from offset
+      <code class="code">ofs</code> with <code class="code">len</code> elements <code class="code">el</code>, possibly adding elements at the
+      end. Raises <code class="code">Invalid_argument</code> if offset <code class="code">ofs</code> is larger than the
+      length of the array.<br>
+</div>
+
+<pre><span id="VALblit"><span class="keyword">val</span> blit</span> : <code class="type">'a <a href="Weak_intf.T.html#TYPEt">t</a> -> int -> 'a <a href="Weak_intf.T.html#TYPEt">t</a> -> int -> int -> unit</code></pre><div class="info ">
+<code class="code">blit ra1 ofs1 ra2 ofs2 len</code> blits resizable array <code class="code">ra1</code> onto
+      <code class="code">ra2</code> reading <code class="code">len</code> elements from offset <code class="code">ofs1</code> and writing them
+      to <code class="code">ofs2</code>, possibly adding elements at the end of ra2. Raises
+      <code class="code">Invalid_argument</code> if <code class="code">ofs1</code> and <code class="code">len</code> do not designate a valid
+      subarray of <code class="code">ra1</code> or if <code class="code">ofs2</code> is larger than the length of
+      <code class="code">ra2</code>.<br>
+</div>
+<br>
+<h6 id="6_Combiningresizablearrays">Combining resizable arrays</h6><br>
+
+<pre><span id="VALappend"><span class="keyword">val</span> append</span> : <code class="type">'a <a href="Weak_intf.T.html#TYPEt">t</a> -> 'a <a href="Weak_intf.T.html#TYPEt">t</a> -> 'a <a href="Weak_intf.T.html#TYPEt">t</a></code></pre><div class="info ">
+<code class="code">append ra1 ra2</code><br>
+<b>Returns</b> a new resizable array using the
+      default strategy and copying <code class="code">ra1</code> and <code class="code">ra2</code> in this order onto
+      it.<br>
+</div>
+
+<pre><span id="VALconcat"><span class="keyword">val</span> concat</span> : <code class="type">'a <a href="Weak_intf.T.html#TYPEt">t</a> list -> 'a <a href="Weak_intf.T.html#TYPEt">t</a></code></pre><div class="info ">
+<code class="code">concat l</code><br>
+<b>Returns</b> a new resizable array using the default
+      strategy and copying all resizable arrays in <code class="code">l</code> in their respective
+      order onto it.<br>
+</div>
+<br>
+<h6 id="6_Addingandremovingelements">Adding and removing elements</h6><br>
+
+<pre><span id="VALadd_one"><span class="keyword">val</span> add_one</span> : <code class="type">'a <a href="Weak_intf.T.html#TYPEt">t</a> -> 'a option -> unit</code></pre><div class="info ">
+<code class="code">add_one ra el</code> adds element <code class="code">el</code> to resizable array <code class="code">ra</code>,
+      possibly causing a reallocation.<br>
+</div>
+
+<pre><span id="VALremove_one"><span class="keyword">val</span> remove_one</span> : <code class="type">'a <a href="Weak_intf.T.html#TYPEt">t</a> -> unit</code></pre><div class="info ">
+<code class="code">remove_one ra</code> removes the last element of resizable array
+      <code class="code">ra</code>, possibly causing a reallocation.<br>
+<b>Raises</b> <code>Failure</code> if the array is empty.<br>
+</div>
+
+<pre><span id="VALremove_n"><span class="keyword">val</span> remove_n</span> : <code class="type">'a <a href="Weak_intf.T.html#TYPEt">t</a> -> int -> unit</code></pre><div class="info ">
+<code class="code">remove_n ra n</code> removes the last n elements of resizable
+      array <code class="code">ra</code>, possibly causing a reallocation.<br>
+<b>Raises</b> <code>Invalid_arg</code> if there are not enough elements or <code class="code">n &lt; 0</code>.<br>
+</div>
+
+<pre><span id="VALremove_range"><span class="keyword">val</span> remove_range</span> : <code class="type">'a <a href="Weak_intf.T.html#TYPEt">t</a> -> int -> int -> unit</code></pre><div class="info ">
+<code class="code">remove_range ra ofs len</code> removes <code class="code">len</code> elements from resizable
+      array <code class="code">ra</code> starting at <code class="code">ofs</code> and possibly causing a
+      reallocation.<br>
+<b>Raises</b> <code>Invalid_argument</code> if range is invalid.<br>
+</div>
+
+<pre><span id="VALclear"><span class="keyword">val</span> clear</span> : <code class="type">'a <a href="Weak_intf.T.html#TYPEt">t</a> -> unit</code></pre><div class="info ">
+<code class="code">clear ra</code> removes all elements from resizable array <code class="code">ra</code>,
+      possibly causing a reallocation.<br>
+</div>
+<br>
+<h6 id="6_Swapping">Swapping</h6><br>
+
+<pre><span id="VALswap"><span class="keyword">val</span> swap</span> : <code class="type">'a <a href="Weak_intf.T.html#TYPEt">t</a> -> int -> int -> unit</code></pre><div class="info ">
+<code class="code">swap ra n m</code> swaps elements at indices <code class="code">n</code> and <code class="code">m</code>.<br>
+<b>Raises</b> <code>Invalid_argument</code> if any index is out of range.<br>
+</div>
+
+<pre><span id="VALswap_in_last"><span class="keyword">val</span> swap_in_last</span> : <code class="type">'a <a href="Weak_intf.T.html#TYPEt">t</a> -> int -> unit</code></pre><div class="info ">
+<code class="code">swap_in_last ra n</code> swaps the last element with the one at
+      position <code class="code">n</code>.<br>
+<b>Raises</b> <code>Invalid_argument</code> if index <code class="code">n</code> is out of range.<br>
+</div>
+<br>
+<h6 id="6_Standardconversions">Standard conversions</h6><br>
+
+<pre><span id="VALto_std"><span class="keyword">val</span> to_std</span> : <code class="type">'a <a href="Weak_intf.T.html#TYPEt">t</a> -> 'a Weak.t</code></pre><div class="info ">
+<code class="code">to_std ra</code> converts a resizable weak array to a standard one.<br>
+</div>
+
+<pre><span id="VALsof_std"><span class="keyword">val</span> sof_std</span> : <code class="type"><a href="Weak_intf.T.html#TYPEstrategy">strategy</a> -> 'a Weak.t -> 'a <a href="Weak_intf.T.html#TYPEt">t</a></code></pre><div class="info ">
+<code class="code">sof_std s ar</code> converts a standard weak array to a resizable
+      one, using strategy <code class="code">s</code>.<br>
+</div>
+
+<pre><span id="VALof_std"><span class="keyword">val</span> of_std</span> : <code class="type">'a Weak.t -> 'a <a href="Weak_intf.T.html#TYPEt">t</a></code></pre><div class="info ">
+<code class="code">of_std ar</code> converts a standard weak array to a resizable one
+      using the default strategy.<br>
+</div>
+<br>
+<h6 id="6_Listconversions">List conversions</h6><br>
+
+<pre><span id="VALto_list"><span class="keyword">val</span> to_list</span> : <code class="type">'a <a href="Weak_intf.T.html#TYPEt">t</a> -> 'a option list</code></pre><div class="info ">
+<code class="code">to_list ra</code> converts resizable array <code class="code">ra</code> to a list.<br>
+</div>
+
+<pre><span id="VALof_list"><span class="keyword">val</span> of_list</span> : <code class="type">'a option list -> 'a <a href="Weak_intf.T.html#TYPEt">t</a></code></pre><div class="info ">
+<code class="code">of_list l</code> creates a resizable array using the default
+      strategy and the elements in list <code class="code">l</code>.<br>
+</div>
+<br>
+<h6 id="6_Iterators">Iterators</h6><br>
+
+<pre><span id="VALiter"><span class="keyword">val</span> iter</span> : <code class="type">('a option -> unit) -> 'a <a href="Weak_intf.T.html#TYPEt">t</a> -> unit</code></pre><div class="info ">
+<code class="code">iter f ra</code> applies the unit-function <code class="code">f</code> to each element in
+      resizable array <code class="code">ra</code>.<br>
+</div>
+
+<pre><span id="VALiteri"><span class="keyword">val</span> iteri</span> : <code class="type">(int -> 'a option -> unit) -> 'a <a href="Weak_intf.T.html#TYPEt">t</a> -> unit</code></pre><div class="info ">
+<code class="code">iteri f ra</code> applies the unit-function <code class="code">f</code> to each index and
+      element in resizable array <code class="code">ra</code>.<br>
+</div>
+
+<pre><span id="VALfold_left"><span class="keyword">val</span> fold_left</span> : <code class="type">('b -> 'a option -> 'b) -> 'b -> 'a <a href="Weak_intf.T.html#TYPEt">t</a> -> 'b</code></pre><div class="info ">
+<code class="code">fold_left f a ra</code> left-folds values in resizable array <code class="code">ra</code>
+      using function <code class="code">f</code> and start accumulator <code class="code">a</code>.<br>
+</div>
+
+<pre><span id="VALfold_right"><span class="keyword">val</span> fold_right</span> : <code class="type">('a option -> 'b -> 'b) -> 'a <a href="Weak_intf.T.html#TYPEt">t</a> -> 'b -> 'b</code></pre><div class="info ">
+<code class="code">fold_right f a ra</code> right-folds values in resizable array <code class="code">ra</code>
+      using function <code class="code">f</code> and start accumulator <code class="code">a</code>.<br>
+</div>
+<br>
+<h6 id="6_Scanningofresizablearrays">Scanning of resizable arrays</h6><br>
+
+<pre><span id="VALfor_all"><span class="keyword">val</span> for_all</span> : <code class="type">('a option -> bool) -> 'a <a href="Weak_intf.T.html#TYPEt">t</a> -> bool</code></pre><div class="info ">
+<code class="code">for_all p ra</code><br>
+<b>Returns</b> <code class="code">true</code> if all elements in resizable
+      array <code class="code">ra</code> satisfy the predicate <code class="code">p</code>, <code class="code">false</code> otherwise.<br>
+</div>
+
+<pre><span id="VALexists"><span class="keyword">val</span> exists</span> : <code class="type">('a option -> bool) -> 'a <a href="Weak_intf.T.html#TYPEt">t</a> -> bool</code></pre><div class="info ">
+<code class="code">exists p ra</code><br>
+<b>Returns</b> <code class="code">true</code> if at least one element in
+      resizable array <code class="code">ra</code> satisfies the predicate <code class="code">p</code>, <code class="code">false</code>
+      otherwise.<br>
+</div>
+
+<pre><span id="VALmem"><span class="keyword">val</span> mem</span> : <code class="type">'a option -> 'a <a href="Weak_intf.T.html#TYPEt">t</a> -> bool</code></pre><div class="info ">
+<code class="code">mem el ra</code><br>
+<b>Returns</b> <code class="code">true</code> if element <code class="code">el</code> is logically equal
+      to any element in resizable array <code class="code">ra</code>, <code class="code">false</code> otherwise.<br>
+</div>
+
+<pre><span id="VALmemq"><span class="keyword">val</span> memq</span> : <code class="type">'a option -> 'a <a href="Weak_intf.T.html#TYPEt">t</a> -> bool</code></pre><div class="info ">
+<code class="code">memq el ra</code><br>
+<b>Returns</b> <code class="code">true</code> if element <code class="code">el</code> is physically equal
+      to any element in resizable array <code class="code">ra</code>, <code class="code">false</code> otherwise.<br>
+</div>
+
+<pre><span id="VALpos"><span class="keyword">val</span> pos</span> : <code class="type">'a option -> 'a <a href="Weak_intf.T.html#TYPEt">t</a> -> int option</code></pre><div class="info ">
+<code class="code">pos el ra</code><br>
+<b>Returns</b> <code class="code">Some index</code> if <code class="code">el</code> is logically
+      equal to the element at <code class="code">index</code> in <code class="code">ra</code>, <code class="code">None</code> otherwise.  <code class="code">index</code>
+      is the index of the first element that matches.<br>
+</div>
+
+<pre><span id="VALposq"><span class="keyword">val</span> posq</span> : <code class="type">'a option -> 'a <a href="Weak_intf.T.html#TYPEt">t</a> -> int option</code></pre><div class="info ">
+<code class="code">posq el ra</code><br>
+<b>Returns</b> <code class="code">Some index</code> if <code class="code">el</code> is physically
+      equal to the element at <code class="code">index</code> in <code class="code">ra</code>, <code class="code">None</code> otherwise.  <code class="code">index</code>
+      is the index of the first element that matches.<br>
+</div>
+<br>
+<h6 id="6_Searchingofresizablearrays">Searching of resizable arrays</h6><br>
+
+<pre><span id="VALfind"><span class="keyword">val</span> find</span> : <code class="type">('a option -> bool) -> 'a <a href="Weak_intf.T.html#TYPEt">t</a> -> 'a option</code></pre><div class="info ">
+<code class="code">find p ra</code><br>
+<b>Raises</b> <code>Not_found</code> if there is no such element.<br>
+<b>Returns</b> the first element in resizable array <code class="code">ra</code>
+      that satisfies predicate <code class="code">p</code>.<br>
+</div>
+
+<pre><span id="VALfind_index"><span class="keyword">val</span> find_index</span> : <code class="type">('a option -> bool) -> 'a <a href="Weak_intf.T.html#TYPEt">t</a> -> int -> int</code></pre><div class="info ">
+<code class="code">find_index p ra pos</code><br>
+<b>Raises</b><ul><li><code>Not_found</code> if there is no such element or if <code class="code">pos</code> is larger
+      than the highest index.</li>
+<li><code>Invalid_argument</code> if <code class="code">pos</code> is negative.</li>
+</ul>
+<b>Returns</b> the index of the first element
+      that satisfies predicate <code class="code">p</code> in resizable array <code class="code">ra</code>, starting
+      search at index <code class="code">pos</code>.<br>
+</div>
+
+<pre><span id="VALfilter"><span class="keyword">val</span> filter</span> : <code class="type">('a option -> bool) -> 'a <a href="Weak_intf.T.html#TYPEt">t</a> -> 'a <a href="Weak_intf.T.html#TYPEt">t</a></code></pre><div class="info ">
+<code class="code">filter p ra</code><br>
+<b>Returns</b> a new resizable array by filtering
+      out all elements in <code class="code">ra</code> that satisfy predicate <code class="code">p</code> using the same
+      strategy as <code class="code">ra</code>.<br>
+</div>
+
+<pre><span id="VALfind_all"><span class="keyword">val</span> find_all</span> : <code class="type">('a option -> bool) -> 'a <a href="Weak_intf.T.html#TYPEt">t</a> -> 'a <a href="Weak_intf.T.html#TYPEt">t</a></code></pre><div class="info ">
+<code class="code">find_all p ra</code> is the same as <code class="code">filter</code><br>
+</div>
+
+<pre><span id="VALfilter_in_place"><span class="keyword">val</span> filter_in_place</span> : <code class="type">('a option -> bool) -> 'a <a href="Weak_intf.T.html#TYPEt">t</a> -> unit</code></pre><div class="info ">
+<code class="code">filter_in_place p ra</code> as <code class="code">filter</code>, but filters in place.<br>
+</div>
+
+<pre><span id="VALpartition"><span class="keyword">val</span> partition</span> : <code class="type">('a option -> bool) -><br>       'a <a href="Weak_intf.T.html#TYPEt">t</a> -> 'a <a href="Weak_intf.T.html#TYPEt">t</a> * 'a <a href="Weak_intf.T.html#TYPEt">t</a></code></pre><div class="info ">
+<code class="code">partition p ra</code><br>
+<b>Returns</b> a pair of resizable arrays, the
+      left part containing only elements of <code class="code">ra</code> that satisfy predicate
+      <code class="code">p</code>, the right one only those that do not satisfy it. Both returned
+      arrays are created using the strategy of <code class="code">ra</code>.<br>
+</div>
+<br>
+<h6 id="6_UNSAFESTUFFUSEWITHCAUTION"><b>UNSAFE STUFF - USE WITH CAUTION!</b></h6><br>
+
+<pre><span id="VALunsafe_get"><span class="keyword">val</span> unsafe_get</span> : <code class="type">'a <a href="Weak_intf.T.html#TYPEt">t</a> -> int -> 'a option</code></pre>
+<pre><span id="VALunsafe_set"><span class="keyword">val</span> unsafe_set</span> : <code class="type">'a <a href="Weak_intf.T.html#TYPEt">t</a> -> int -> 'a option -> unit</code></pre>
+<pre><span id="VALunsafe_sub"><span class="keyword">val</span> unsafe_sub</span> : <code class="type">'a <a href="Weak_intf.T.html#TYPEt">t</a> -> int -> int -> 'a <a href="Weak_intf.T.html#TYPEt">t</a></code></pre>
+<pre><span id="VALunsafe_fill"><span class="keyword">val</span> unsafe_fill</span> : <code class="type">'a <a href="Weak_intf.T.html#TYPEt">t</a> -> int -> int -> 'a option -> unit</code></pre>
+<pre><span id="VALunsafe_blit"><span class="keyword">val</span> unsafe_blit</span> : <code class="type">'a <a href="Weak_intf.T.html#TYPEt">t</a> -> int -> 'a <a href="Weak_intf.T.html#TYPEt">t</a> -> int -> int -> unit</code></pre>
+<pre><span id="VALunsafe_remove_one"><span class="keyword">val</span> unsafe_remove_one</span> : <code class="type">'a <a href="Weak_intf.T.html#TYPEt">t</a> -> unit</code></pre>
+<pre><span id="VALunsafe_remove_n"><span class="keyword">val</span> unsafe_remove_n</span> : <code class="type">'a <a href="Weak_intf.T.html#TYPEt">t</a> -> int -> unit</code></pre>
+<pre><span id="VALunsafe_swap"><span class="keyword">val</span> unsafe_swap</span> : <code class="type">'a <a href="Weak_intf.T.html#TYPEt">t</a> -> int -> int -> unit</code></pre>
+<pre><span id="VALunsafe_swap_in_last"><span class="keyword">val</span> unsafe_swap_in_last</span> : <code class="type">'a <a href="Weak_intf.T.html#TYPEt">t</a> -> int -> unit</code></pre></body></html>
