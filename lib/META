@@ -1,6 +1,6 @@
 # OASIS_START
-# DO NOT EDIT (digest: 92a37835492183264596a3cbbe082281)
-version = "4.0.4"
+# DO NOT EDIT (digest: 4ecf2b88a3bddc1990bd0a6dfedbf2a5)
+version = "4.0.5"
 description = "RES - Library for resizable, contiguous datastructures."
 archive(byte) = "res.cma"
 archive(byte, plugin) = "res.cma"
