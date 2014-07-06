@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset='utf-8' />
+    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
+    <meta name="description" content="Res : OCaml library for resizable arrays and strings" />
+
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <title>Res</title>
+  </head>
+
+  <body>
+
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/mmottl/res">View on GitHub</a>
+
+          <h1 id="project_title">Res</h1>
+          <h2 id="project_tagline">OCaml library for resizable arrays and strings</h2>
+
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/mmottl/res/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/mmottl/res/tarball/master">Download this project as a tar.gz file</a>
+            </section>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <h1>
+<a name="res---automatically-resizing-contiguous-memory-for-ocaml" class="anchor" href="#res---automatically-resizing-contiguous-memory-for-ocaml"><span class="octicon octicon-link"></span></a>RES - Automatically Resizing Contiguous Memory for OCaml</h1>
+
+<hr><h2>
+<a name="what-is-res" class="anchor" href="#what-is-res"><span class="octicon octicon-link"></span></a>What is RES?</h2>
+
+<p>This OCaml-library consists of a set of modules which implement automatically
+resizing (= reallocating) data structures that consume a contiguous part
+of memory.  This allows appending and removing of elements to/from arrays
+(both boxed and unboxed), strings (buffers), bit strings and weak arrays
+while still maintaining fast constant-time access to elements.</p>
+
+<p>There are also functors that allow the generation of similar modules which
+use different reallocation strategies.</p>
+
+<h2>
+<a name="features" class="anchor" href="#features"><span class="octicon octicon-link"></span></a>Features</h2>
+
+<ul>
+<li>
+<p>Fast constant-time access to indexed elements (e.g. in arrays and
+strings) is often a prerequisite for short execution times of programs.</p>
+
+<p>Still, operations like adding and/or removing elements to/from the
+end of such data structures are often needed.  Unfortunately, having
+both properties at the same time sometimes requires reallocating this
+contiguous part of memory.</p>
+
+<p>This module does not eliminate this problem, but hides the process of
+reallocation from the user, i.e. it happens automatically.</p>
+
+<p>Thus, the user is liberated from this bug-attracting (e.g. index errors)
+task.</p>
+</li>
+<li>
+<p>This library allows the user to parameterize allocation strategies at
+runtime.  This is an important feature, because it is impossible for
+any allocation algorithm to perform optimally without having knowledge
+about the user program.</p>
+
+<p>For example, the programmer might know that a consecutive series of
+operations will alternately add and remove large batches of elements.
+In such a case it would be wise to keep a high reserve of available slots
+in the data structure, because otherwise it will resize very often during
+this procedure which requires a significant amount of time.</p>
+
+<p>By raising a corresponding threshold in appropriate places at runtime,
+programmers can fine-tune the behavior of e.g. their buffers for optimal
+performance and set this parameter back later to save memory.</p>
+</li>
+<li>
+<p>Because optimal reallocation strategies may be quite complex,
+it was also a design goal to have users supply their own ones (if
+required).</p>
+
+<p>By using functors users can parameterize these data structures with
+their own reallocation strategies, giving them even more control over
+how and when reallocations are triggered.</p>
+</li>
+<li><p>Users may want to add support for additional low-level implementations
+that require reallocations.  In this case, too, it is fairly easy to
+create new modules by using functors.</p></li>
+<li>
+<p>The library implements a large interface of functions, all of which
+are completely independent of the reallocation strategy and the low-level
+implementation.</p>
+
+<p>All the interfaces of the corresponding low-level implementations of
+data structures (e.g. array, string) are fully supported and have been
+extended with further functionality.  There is even a new buffer module
+which can be used in every context of the standard one.</p>
+</li>
+<li>
+<p>OCaml makes a distinction between unboxed and boxed arrays.  If the type
+of an array is <code>float</code>, the representation will be unboxed in cases in
+which the array is not used in a polymorphic context (native code only).</p>
+
+<p>To benefit from these much faster representations there are specialized
+versions of automatically resizing arrays in the distribution.</p>
+</li>
+</ul><h2>
+<a name="usage" class="anchor" href="#usage"><span class="octicon octicon-link"></span></a>Usage</h2>
+
+<p>The API is fully documented and can be built as HTML using <code>make doc</code>.
+It is also available <a href="http://mmottl.github.io/res/api">online</a>.</p>
+
+<p>The preparameterized modules (default strategy) and the functors for mapping
+strategy-implementations to this kind of modules are contained and documented
+in file <code>lib/res.mli</code>.</p>
+
+<p>For examples of how to use the functors to implement new strategies and/or
+low-level representations, take a look at the implementation in <code>lib/res.ml</code>.</p>
+
+<p>Their function interface, however, is documented in files <code>lib/pres_intf.ml</code>
+(for parameterized "low-level" types like e.g. normal arrays) and in
+<code>lib/nopres_intf.ml</code> (for non-parameterized "low-level" types like e.g. float
+arrays, strings (buffers), etc.).</p>
+
+<h3>
+<a name="convenience" class="anchor" href="#convenience"><span class="octicon octicon-link"></span></a>Convenience</h3>
+
+<p>It should be noted that it is possible to use the standard notation for
+accessing elements (e.g. <code>ar.(42)</code>) with resizable arrays (and even with
+<code>Buffer</code>, <code>Bits</code>, etc...).  This requires a short explanation of how OCaml
+treats such syntactic sugar:</p>
+
+<p>All that OCaml does is that it replaces such syntax with an appropriate
+<code>Array.get</code> or <code>Array.set</code>.  This may be <em>any</em> module that happens to be
+bound to this name in the current scope.  The same principle is true for the
+<code>String</code>-module and the <code>.[]</code>-operator.</p>
+
+<p>Thus, the following works:</p>
+
+<div class="highlight highlight-ocaml"><pre><span class="k">module</span> <span class="nc">Array</span> <span class="o">=</span> <span class="nn">Res</span><span class="p">.</span><span class="nc">Bits</span>
+<span class="k">module</span> <span class="nc">String</span> <span class="o">=</span> <span class="nn">Res</span><span class="p">.</span><span class="nc">Buffer</span>
+
+<span class="k">let</span> <span class="bp">()</span> <span class="o">=</span>
+  <span class="k">let</span> <span class="n">ar</span> <span class="o">=</span> <span class="nn">Array</span><span class="p">.</span><span class="n">empty</span> <span class="bp">()</span> <span class="k">in</span>
+  <span class="nn">Array</span><span class="p">.</span><span class="n">add_one</span> <span class="n">ar</span> <span class="bp">true</span><span class="o">;</span>
+  <span class="n">print_endline</span> <span class="o">(</span><span class="n">string_of_bool</span> <span class="n">ar</span><span class="o">.(</span><span class="mi">0</span><span class="o">));</span>
+  <span class="k">let</span> <span class="n">str</span> <span class="o">=</span> <span class="nn">String</span><span class="p">.</span><span class="n">empty</span> <span class="bp">()</span> <span class="k">in</span>
+  <span class="nn">String</span><span class="p">.</span><span class="n">add_one</span> <span class="n">str</span> <span class="sc">'x'</span><span class="o">;</span>
+  <span class="n">print_char</span> <span class="n">str</span><span class="o">.[</span><span class="mi">0</span><span class="o">];</span>
+  <span class="n">print_newline</span> <span class="bp">()</span>
+</pre></div>
+
+<p>Do not forget that it is even possible to bind modules locally.  Example:</p>
+
+<div class="highlight highlight-ocaml"><pre><span class="k">let</span> <span class="bp">()</span> <span class="o">=</span>
+  <span class="k">let</span> <span class="k">module</span> <span class="nc">Array</span> <span class="o">=</span> <span class="nn">Res</span><span class="p">.</span><span class="nc">Array</span> <span class="k">in</span>
+  <span class="nn">Printf</span><span class="p">.</span><span class="n">printf</span> <span class="s2">"%d</span><span class="se">\n</span><span class="s2">"</span> <span class="o">(</span><span class="nn">Array</span><span class="p">.</span><span class="n">init</span> <span class="mi">10</span> <span class="o">(</span><span class="k">fun</span> <span class="n">x</span> <span class="o">-&gt;</span> <span class="n">x</span> <span class="o">*</span> <span class="n">x</span><span class="o">)).(</span><span class="mi">7</span><span class="o">)</span>
+</pre></div>
+
+<p>If you want to change one of your files to make use of resizable arrays
+instead of standard ones without much trouble, please read the following:</p>
+
+<p>You may want to "save" the standard <code>Array</code>-module and its type for later
+access:</p>
+
+<div class="highlight highlight-ocaml"><pre><span class="k">module</span> <span class="nc">StdArray</span> <span class="o">=</span> <span class="nc">Array</span>
+<span class="k">type</span> <span class="k">'</span><span class="n">a</span> <span class="n">std_array</span> <span class="o">=</span> <span class="k">'</span><span class="n">a</span> <span class="kt">array</span>
+</pre></div>
+
+<p>Make the resizable implementation (includes the index operators!) available:</p>
+
+<div class="highlight highlight-ocaml"><pre><span class="k">open</span> <span class="nc">Res</span>
+</pre></div>
+
+<p>Or more explicitly:</p>
+
+<div class="highlight highlight-ocaml"><pre><span class="k">module</span> <span class="nc">Array</span> <span class="o">=</span> <span class="nn">Res</span><span class="p">.</span><span class="nc">Array</span>
+</pre></div>
+
+<p>Or if you want to use a specific <code>Array</code>-implementation:</p>
+
+<div class="highlight highlight-ocaml"><pre><span class="k">module</span> <span class="nc">Array</span> <span class="o">=</span> <span class="nn">Res</span><span class="p">.</span><span class="nc">Bits</span>
+</pre></div>
+
+<p>Then set the type:</p>
+
+<div class="highlight highlight-ocaml"><pre><span class="k">type</span> <span class="k">'</span><span class="n">a</span> <span class="kt">array</span> <span class="o">=</span> <span class="k">'</span><span class="n">a</span> <span class="nn">Array</span><span class="p">.</span><span class="n">t</span>
+</pre></div>
+
+<p>If you create standard arrays with the built-in syntax, change lines like:</p>
+
+<div class="highlight highlight-ocaml"><pre><span class="k">let</span> <span class="n">ar</span> <span class="o">=</span> <span class="o">[|</span> <span class="mi">1</span><span class="o">;</span> <span class="mi">2</span><span class="o">;</span> <span class="mi">3</span><span class="o">;</span> <span class="mi">4</span> <span class="o">|]</span> <span class="k">in</span>
+</pre></div>
+
+<p>to:</p>
+
+<div class="highlight highlight-ocaml"><pre><span class="k">let</span> <span class="n">ar</span> <span class="o">=</span> <span class="nn">Array</span><span class="p">.</span><span class="n">of_array</span> <span class="o">[|</span> <span class="mi">1</span><span class="o">;</span> <span class="mi">2</span><span class="o">;</span> <span class="mi">3</span><span class="o">;</span> <span class="mi">4</span> <span class="o">|]</span> <span class="k">in</span>
+</pre></div>
+
+<p>This should allow all of your sources to compile out-of-the-box with the
+additional functionality.  In places where you still need the standard
+implementation you should have no problems to use the rebound module
+and type to do so.</p>
+
+<p>This trick works similarly for the old and the new Buffer-module.  You might
+also want to replace the <code>String</code>-module in this fashion.  The latter one,
+however, supports a number of functions like e.g. <code>escape</code>, which are not
+available then.</p>
+
+<hr><h2>
+<a name="contact-information-and-contributing" class="anchor" href="#contact-information-and-contributing"><span class="octicon octicon-link"></span></a>Contact Information and Contributing</h2>
+
+<p>In the case of bugs, feature requests, contributions and similar, you can
+contact me here: <a href="mailto:markus.mottl@gmail.com">markus.mottl@gmail.com</a></p>
+
+<p>Up-to-date information should be available at: <a href="http://mmottl.github.io/res">http://mmottl.github.io/res</a></p>
+
+<p>Enjoy!</p>
+
+<p>Markus Mottl on July 10, 2012</p>
+      </section>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">Res maintained by <a href="https://github.com/mmottl">mmottl</a></p>
+        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+
+    
+
+  </body>
+</html>
