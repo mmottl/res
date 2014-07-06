@@ -10,7 +10,7 @@ LicenseFile:      COPYING.txt
 License:          LGPL-2.1+ with OCaml linking exception
 OCamlVersion:     >= 3.12
 FindlibVersion:   >= 1.3.1
-Homepage:         https://bitbucket.org/mmottl/res
+Homepage:         http://mmottl.github.io/res
 #Categories:
 #FilesAB:
 
@@ -79,8 +79,8 @@ Document API
   XOCamlbuildPath:      .
   XOCamlbuildLibraries: res
 
-SourceRepository trunk
-  Type:       hg
-  Location:   ssh://hg@bitbucket.org/mmottl/res
-  Browser:    https://bitbucket.org/mmottl/res
-  Tag:        release-$(pkg_version)
+SourceRepository head
+  Type:       Git
+  Location:   https://github.com/mmottl/res.git
+  Browser:    https://github.com/mmottl/res
+  Tag:        v$(pkg_version)

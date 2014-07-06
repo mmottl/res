@@ -79,7 +79,7 @@ Usage
 -----
 
 The API is fully documented and can be built as HTML using `make doc`.
-It is also available [online](http://mmottl.bitbucket.org/projects/res/api/).
+It is also available [online](http://mmottl.github.io/res/api).
 
 The preparameterized modules (default strategy) and the functors for mapping
 strategy-implementations to this kind of modules are contained and documented
@@ -107,25 +107,27 @@ bound to this name in the current scope.  The same principle is true for the
 
 Thus, the following works:
 
-    :::ocaml
-    module Array = Res.Bits
-    module String = Res.Buffer
+```ocaml
+module Array = Res.Bits
+module String = Res.Buffer
 
-    let () =
-      let ar = Array.empty () in
-      Array.add_one ar true;
-      print_endline (string_of_bool ar.(0));
-      let str = String.empty () in
-      String.add_one str 'x';
-      print_char str.[0];
-      print_newline ()
+let () =
+  let ar = Array.empty () in
+  Array.add_one ar true;
+  print_endline (string_of_bool ar.(0));
+  let str = String.empty () in
+  String.add_one str 'x';
+  print_char str.[0];
+  print_newline ()
+```
 
 Do not forget that it is even possible to bind modules locally.  Example:
 
-    :::ocaml
-    let () =
-      let module Array = Res.Array in
-      Printf.printf "%d\n" (Array.init 10 (fun x -> x * x)).(7)
+```ocaml
+let () =
+  let module Array = Res.Array in
+  Printf.printf "%d\n" (Array.init 10 (fun x -> x * x)).(7)
+```
 
 If you want to change one of your files to make use of resizable arrays
 instead of standard ones without much trouble, please read the following:
@@ -133,39 +135,46 @@ instead of standard ones without much trouble, please read the following:
 You may want to "save" the standard `Array`-module and its type for later
 access:
 
-    :::ocaml
-    module StdArray = Array
-    type 'a std_array = 'a array
+```ocaml
+module StdArray = Array
+type 'a std_array = 'a array
+```
 
 Make the resizable implementation (includes the index operators!) available:
 
-    :::ocaml
-    open Res
+```ocaml
+open Res
+```
 
 Or more explicitly:
 
-    :::ocaml
-    module Array = Res.Array
+```ocaml
+module Array = Res.Array
+```
 
 Or if you want to use a specific `Array`-implementation:
 
-    :::ocaml
-    module Array = Res.Bits
+```ocaml
+module Array = Res.Bits
+```
 
 Then set the type:
 
-    :::ocaml
-    type 'a array = 'a Array.t
+```ocaml
+type 'a array = 'a Array.t
+```
 
 If you create standard arrays with the built-in syntax, change lines like:
 
-    :::ocaml
-    let ar = [| 1; 2; 3; 4 |] in
+```ocaml
+let ar = [| 1; 2; 3; 4 |] in
+```
 
 to:
 
-    :::ocaml
-    let ar = Array.of_array [| 1; 2; 3; 4 |] in
+```ocaml
+let ar = Array.of_array [| 1; 2; 3; 4 |] in
+```
 
 This should allow all of your sources to compile out-of-the-box with the
 additional functionality.  In places where you still need the standard
@@ -185,9 +194,8 @@ Contact Information and Contributing
 In the case of bugs, feature requests, contributions and similar, you can
 contact me here: <markus.mottl@gmail.com>
 
-Up-to-date information should be available at:
-<https://bitbucket.org/mmottl/res>
+Up-to-date information should be available at: <http://mmottl.github.io/res>
 
 Enjoy!
 
-Markus Mottl in Rutherford, NJ on July 10, 2012
+Markus Mottl on July 10, 2012

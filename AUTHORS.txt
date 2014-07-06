@@ -1,8 +1,12 @@
 (* OASIS_START *)
-(* DO NOT EDIT (digest: cbda9aba8f6c8a053e342da5d20f3008) *)
-Authors of res
-Markus Mottl <markus.mottl@gmail.com>
+(* DO NOT EDIT (digest: eb6ce71b84f892a8829662baaaeae8fd) *)
 
-Current maintainers of res
-Markus Mottl <markus.mottl@gmail.com>
+Authors of res:
+
+* Markus Mottl <markus.mottl@gmail.com>
+
+Current maintainers of res:
+
+* Markus Mottl <markus.mottl@gmail.com>
+
 (* OASIS_STOP *)
