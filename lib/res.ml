@@ -20,6 +20,8 @@
    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 *)
 
+open Res_compat
+
 module DefStrat = struct
   type t = float * float * int
 
@@ -54,7 +56,7 @@ module Unsafe_float_impl = struct
   type t = el array
 
   let length = Array.length
-  let create n = Array.create n 0.0
+  let create n = Array.make n 0.0
   let make = Array.make
   let unsafe_get = Array.unsafe_get
   let unsafe_set = Array.unsafe_set
@@ -99,7 +101,7 @@ module Bit_impl = struct
   let bit_j = Array.init bpi (fun j -> 1 lsl j)
   let bit_not_j = Array.init bpi (fun j -> max_int - bit_j.(j))
 
-  let low_mask = Array.create (bpi + 1) 0
+  let low_mask = Array.make (bpi + 1) 0
 
   let () =
     for i = 1 to bpi do
@@ -115,10 +117,10 @@ module Bit_impl = struct
   let make n b =
     let initv = if b then max_int else 0 in
     let r = n mod bpi in
-    if r = 0 then { length = n; bits = Array.create (n / bpi) initv }
+    if r = 0 then { length = n; bits = Array.make (n / bpi) initv }
     else begin
       let s = n / bpi in
-      let b = Array.create (s + 1) initv in
+      let b = Array.make (s + 1) initv in
       b.(s) <- b.(s) land low_mask.(r);
       { length = n; bits = b }
     end
@@ -194,16 +196,16 @@ end
 
 module Buffer_impl = struct
   type el = char
-  type t = string
+  type t = Bytes.t
 
-  let length = String.length
-  let create = String.create
-  let make = String.make
+  let length = Bytes.length
+  let create = Bytes.create
+  let make = Bytes.make
 
   let name = "Res.Buffer"
-  let unsafe_get = String.get
-  let unsafe_set = String.set
-  let unsafe_blit = String.blit
+  let unsafe_get = Bytes.unsafe_get
+  let unsafe_set = Bytes.unsafe_set
+  let unsafe_blit = Bytes.unsafe_blit
 end
 
 module MakeArray (S : Strat.T) = Pres_impl.Make (S) (Array_impl)
@@ -216,7 +218,7 @@ module MakeBuffer (S : Strat.T) = struct
   include B
 
   let create _ = empty ()
-  let contents buf = String.sub buf.ar 0 (length buf)
+  let contents buf = Bytes.sub_string buf.ar 0 (length buf)
   let reset = clear
   let add_char = add_one
 
@@ -224,16 +226,20 @@ module MakeBuffer (S : Strat.T) = struct
     let old_buf_len = length buf in
     let len = String.length str in
     maybe_grow_ix buf (buf.vlix + len);
-    String.blit str 0 buf.ar old_buf_len len
+    Bytes.blit_string str 0 buf.ar old_buf_len len
 
   let add_substring buf str ofs len =
     if ofs < 0 || len < 0 || ofs + len > String.length str then
       invalid_arg "add_substring";
     let old_buf_len = length buf in
     maybe_grow_ix buf (buf.vlix + len);
-    String.blit str ofs buf.ar old_buf_len len
+    Bytes.blit_string str ofs buf.ar old_buf_len len
 
-  let add_buffer b1 b2 = add_substring b1 b2.ar 0 (length b2)
+  let add_buffer b1 b2 =
+    let len = length b2 in
+    let old_buf_len = length b1 in
+    maybe_grow_ix b1 (b1.vlix + len);
+    Bytes.blit b2.ar 0 b1.ar old_buf_len len
 
   let add_channel buf ch len =
     let old_buf_len = length buf in

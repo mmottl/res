@@ -29,4 +29,4 @@
 true: -traverse
 <{lib,examples}/**>: traverse
 
-<**/*.ml{,i}>: warn(Aer-44), strict_sequence, annot
+<**/*.ml{,i}>: warn(Aer-44), strict_sequence, safe_string, annot
