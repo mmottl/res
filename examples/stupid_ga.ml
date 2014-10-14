@@ -60,9 +60,9 @@ module Ga (Spec : GA_SPEC) = struct
 
   let select_pop p =
     let compare a b = match a.fitness, b.fitness with
-      | Some af, Some bf -> af >= bf
+      | Some af, Some bf -> compare bf af
       | _ -> failwith "select_pop: unevaluated individual!" in
-    Sort.array compare p;
+    Array.sort compare p;
     for i = 0 to Array.length p / 2 do p.(i) <- create_indiv () done;
 end
 
