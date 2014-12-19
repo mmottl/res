@@ -228,7 +228,8 @@ module Make (S : Strat.T) (Impl : Implementation) = struct
     else unsafe_remove_n ra n
 
   let unsafe_remove_range ra ofs len =
-    unsafe_blit_on_other ra (ofs + len) ra ofs (length ra - len);
+    let ofs_len = ofs + len in
+    unsafe_blit_on_other ra ofs_len ra ofs (length ra - ofs_len);
     unsafe_remove_n ra len
 
   let remove_range ra ofs len =

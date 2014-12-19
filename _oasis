@@ -1,6 +1,6 @@
 OASISFormat:      0.4
 Name:             res
-Version:          4.0.6
+Version:          4.0.7
 Synopsis:         RES - Library for resizable, contiguous datastructures.
 Description:      RES is a library containing resizable arrays, strings, and bitvectors.
 Authors:          Markus Mottl <markus.mottl@gmail.com>
