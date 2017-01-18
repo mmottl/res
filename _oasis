@@ -20,7 +20,7 @@ XStdFilesREADME:  false
 BuildTools:       ocamldoc, ocamlbuild
 
 Library res
-  Path:           lib
+  Path:           src
   FindlibName:    res
   Modules:        Nopres_impl,
                   Nopres_intf,

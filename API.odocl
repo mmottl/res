@@ -1,11 +1,11 @@
 # OASIS_START
-# DO NOT EDIT (digest: 89eab6dae45df20abe5f63f242bc9ec9)
-lib/Nopres_impl
-lib/Nopres_intf
-lib/Pres_impl
-lib/Pres_intf
-lib/Res
-lib/Strat
-lib/Weak_impl
-lib/Weak_intf
+# DO NOT EDIT (digest: fa47d000f389ab7838374800d7e4bea2)
+src/Nopres_impl
+src/Nopres_intf
+src/Pres_impl
+src/Pres_intf
+src/Res
+src/Strat
+src/Weak_impl
+src/Weak_intf
 # OASIS_STOP
