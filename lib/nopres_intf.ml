@@ -29,9 +29,14 @@ module type T = sig
   (** Module implementing the reallocation strategy *)
   module Strategy : Strat.T
 
-  type strategy = Strategy.t (** Type of reallocation strategy *)
-  type t (** Type of resizable arrays *)
-  type el (** Type of the elements in the resizable array *)
+  (** Type of reallocation strategy *)
+  type strategy = Strategy.t
+
+  (** Type of resizable arrays *)
+  type t
+
+  (** Type of the elements in the resizable array *)
+  type el
 
 
   (** {6 Index and length information} *)
