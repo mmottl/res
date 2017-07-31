@@ -1,10 +1,6 @@
-RES - Automatically Resizing Contiguous Memory for OCaml
-========================================================
+## RES - Automatically Resizing Contiguous Memory for OCaml
 
----------------------------------------------------------------------------
-
-What is RES?
-------------
+### What is RES?
 
 This OCaml-library consists of a set of modules which implement automatically
 resizing (= reallocating) data structures that consume a contiguous part
@@ -15,8 +11,7 @@ while still maintaining fast constant-time access to elements.
 There are also functors that allow the generation of similar modules which
 use different reallocation strategies.
 
-Features
---------
+### Features
 
   * Fast constant-time access to indexed elements (e.g. in arrays and
     strings) is often a prerequisite for short execution times of programs.
@@ -75,8 +70,7 @@ Features
     To benefit from these much faster representations there are specialized
     versions of automatically resizing arrays in the distribution.
 
-Usage
------
+### Usage
 
 The API is fully documented and can be built as HTML using `make doc`.
 It is also available [online](http://mmottl.github.io/res/api).
@@ -93,7 +87,7 @@ Their function interface, however, is documented in files `lib/pres_intf.ml`
 `lib/nopres_intf.ml` (for non-parameterized "low-level" types like e.g. float
 arrays, strings (buffers), etc.).
 
-### Convenience
+#### Convenience
 
 It should be noted that it is possible to use the standard notation for
 accessing elements (e.g. `ar.(42)`) with resizable arrays (and even with
@@ -186,16 +180,9 @@ also want to replace the `String`-module in this fashion.  The latter one,
 however, supports a number of functions like e.g. `escape`, which are not
 available then.
 
----------------------------------------------------------------------------
+### Contact Information and Contributing
 
-Contact Information and Contributing
-------------------------------------
+Please submit bugs reports, feature requests, contributions and similar to
+the [GitHub issue tracker](https://github.com/mmottl/res/issues).
 
-In the case of bugs, feature requests, contributions and similar, you can
-contact me here: <markus.mottl@gmail.com>
-
-Up-to-date information should be available at: <http://mmottl.github.io/res>
-
-Enjoy!
-
-Markus Mottl on July 10, 2012
+Up-to-date information is available at: <https://mmottl.github.io/res>
