@@ -1,0 +1,12 @@
+(jbuild_version 1)
+
+(library (
+  (name res)
+  (public_name res)
+  (flags (
+    :standard
+    -w -9
+    -safe-string -strict-sequence
+    -principal -short-paths
+  ))
+))

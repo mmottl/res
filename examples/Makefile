@@ -1,0 +1,10 @@
+TARGETS = $(addsuffix .bc, buffer_ex defstrat stupid_ga weak_ex)
+
+.PHONY: all clean
+
+all:
+	@echo jbuilder: Entering directory \`$(abspath $(dir $(lastword $(PWD))))\'
+	@jbuilder build --dev $(TARGETS)
+
+clean:
+	@jbuilder clean

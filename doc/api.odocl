@@ -1,5 +1,3 @@
-# OASIS_START
-# DO NOT EDIT (digest: fa47d000f389ab7838374800d7e4bea2)
 src/Nopres_impl
 src/Nopres_intf
 src/Pres_impl
@@ -8,4 +6,3 @@ src/Res
 src/Strat
 src/Weak_impl
 src/Weak_intf
-# OASIS_STOP
