@@ -54,7 +54,7 @@ module Unsafe_float_impl = struct
   type t = el array
 
   let length = Array.length
-  let create n = Array.make n 0.0
+  let create = Array.create_float
   let make = Array.make
   let unsafe_get = Array.unsafe_get
   let unsafe_set = Array.unsafe_set
