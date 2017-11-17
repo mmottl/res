@@ -4,9 +4,7 @@
   (names (buffer_ex defstrat stupid_ga weak_ex))
   (flags (
     :standard
-    -w -9
-    -safe-string -strict-sequence
-    -principal -short-paths
+    -w -9 -strict-sequence -principal -short-paths
   ))
   (libraries (res))
 ))
