@@ -26,12 +26,13 @@
 
 (** Default strategy for resizable datastructures *)
 module DefStrat : (Strat.T with type t = float * float * int)
-(** [type t] is a triple [waste, shrink_trig, min_size], where
-    [waste] (default: 1.5) indicates by how much the array should
-    be grown in excess when reallocation is triggered, [shrink_trig]
+(** [type t] is a triple [(waste, shrink_trig, min_size)], where
+    [waste] (default: 1.5) indicates how much the array should
+    grow in excess when reallocation is triggered, [shrink_trig]
     (default: 0.5) at which percentage of excess elements it should be
-    shrinked and [min_size] (default: 16 elements) is the minimum size
+    shrunk and [min_size] (default: 16 elements) is the minimum size
     of the resizable array. *)
+
 
 module BitDefStrat : (Strat.T with type t = float * float * int)
 (** Same as [DefStrat], but the minimum size is 1024 elements (bits). *)

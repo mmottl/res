@@ -46,6 +46,6 @@ module type T = sig
       not necessary to resize.
 
       Be careful, the new (real) length {b must} be larger than the new
-      (virtual) length, otherwise your program may crash!
+      virtual length [new_len], otherwise your program may crash!
   *)
 end
