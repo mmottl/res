@@ -115,7 +115,7 @@ module type T = sig
 
   val enforce_strategy : 'a t -> unit
   (** [enforce_strategy ra] forces a reallocation if necessary
-      (e.g. after a [put_strategy]. *)
+      (e.g. after a [put_strategy]). *)
 
 
   (** {6 Copying, blitting and range extraction} *)
