@@ -1,20 +1,24 @@
-opam-version: "1.2"
+opam-version: "2.0"
 maintainer: "Markus Mottl <markus.mottl@gmail.com>"
 authors: [ "Markus Mottl <markus.mottl@gmail.com>" ]
 license: "LGPL-2.1+ with OCaml linking exception"
 homepage: "https://mmottl.github.io/res"
 doc: "https://mmottl.github.io/res/api"
-dev-repo: "https://github.com/mmottl/res.git"
+dev-repo: "git+https://github.com/mmottl/res.git"
 bug-reports: "https://github.com/mmottl/res/issues"
 
 build: [
-  ["jbuilder" "subst" "-p" name] {pinned}
-  ["jbuilder" "build" "-p" name "-j" jobs]
+  ["dune" "subst"] {pinned}
+  ["dune" "build" "-p" name "-j" jobs]
 ]
 
 depends: [
+  "ocaml" {>= "4.04"}
+  "dune" {build & >= "1.4.0"}
   "base-bytes"
-  "jbuilder" {build & >= "1.0+beta10"}
 ]
 
-available: [ ocaml-version >= "4.04" ]
+synopsis: "RES - Library for resizable, contiguous datastructures"
+
+description: """
+RES is a library containing resizable arrays, strings, and bitvectors."""

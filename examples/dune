@@ -1,0 +1,4 @@
+(executables
+  (names buffer_ex defstrat stupid_ga weak_ex)
+  (libraries res)
+)
