@@ -2,6 +2,8 @@
 
   * Switched to OPAM file generation via `dune-project`
 
+  * Used packed float array implementation for resizable float arrays
+
 
 ### 5.0.1 (2018-10-25)
 

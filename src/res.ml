@@ -50,14 +50,9 @@ module Array_impl = struct
 end
 
 module Unsafe_float_impl = struct
-  type el = float
-  type t = el array
+  include Float.Array
 
-  let length = Array.length
-  let create = Array.create_float
-  let make = Array.make
-  let unsafe_get = Array.unsafe_get
-  let unsafe_set = Array.unsafe_set
+  type el = float
 
   let unsafe_blit (ar1 : t) ofs1 ar2 ofs2 len =
     if ofs1 < ofs2 then
@@ -72,14 +67,14 @@ module Float_impl = struct
   include Unsafe_float_impl
 
   let name = "Res.Floats"
-  let unsafe_get = Array.get
-  let unsafe_set = Array.set
+  let unsafe_get = get
+  let unsafe_set = set
 
   let unsafe_blit ar1 ofs1 ar2 ofs2 len =
     if
       len < 0 || ofs1 < 0
-      || ofs1 > Array.length ar1 - len
-      || ofs2 < 0 || ofs2 > Array.length ar2 - len
+      || ofs1 > length ar1 - len
+      || ofs2 < 0 || ofs2 > length ar2 - len
     then invalid_arg "Res.Floats.blit"
     else unsafe_blit ar1 ofs1 ar2 ofs2 len
 end
