@@ -151,10 +151,10 @@ module Make (S : Strat.T) (Impl : Implementation) = struct
     done;
     { ra with ar = new_ar }
 
-  let unsafe_blit_on_other { ar = ar1 } ofs1 { ar = ar2 } ofs2 len =
+  let unsafe_blit_on_other ra1 ofs1 ra2 ofs2 len =
     let ofs_diff = ofs2 - ofs1 in
     for i = ofs1 to ofs1 + len - 1 do
-      Impl.unsafe_set ar2 (i + ofs_diff) (Impl.unsafe_get ar1 i)
+      Impl.unsafe_set ra2.ar (i + ofs_diff) (Impl.unsafe_get ra1.ar i)
     done
 
   let append ra1 ra2 =
@@ -248,8 +248,8 @@ module Make (S : Strat.T) (Impl : Implementation) = struct
     if n > ra.vlix || m > ra.vlix || n < 0 || m < 0 then invalid_arg "swap"
     else unsafe_swap ra n m
 
-  let unsafe_swap_in_last ({ ar = ar } as ra) n =
-    Impl.unsafe_set ar n (Impl.unsafe_get ar ra.vlix);
+  let unsafe_swap_in_last ra n =
+    Impl.unsafe_set ra.ar n (Impl.unsafe_get ra.ar ra.vlix);
     unsafe_remove_one ra
 
   let swap_in_last ra n =
@@ -267,15 +267,15 @@ module Make (S : Strat.T) (Impl : Implementation) = struct
     if ofs < 0 || len < 0 || ofs > length ra then invalid_arg "fill"
     else unsafe_fill ra ofs len x
 
-  let unsafe_blit { ar = ar1 } ofs1 ({ ar = ar2 } as ra2) ofs2 len =
+  let unsafe_blit ra1 ofs1 ra2 ofs2 len =
     guarantee_ix ra2 (ofs2 + len - 1);
     if ofs1 < ofs2 then
       for i = len - 1 downto 0 do
-        Impl.unsafe_set ar2 (ofs2 + i) (Impl.unsafe_get ar1 (ofs1 + i))
+        Impl.unsafe_set ra2.ar (ofs2 + i) (Impl.unsafe_get ra1.ar (ofs1 + i))
       done
     else
       for i = 0 to len - 1 do
-        Impl.unsafe_set ar2 (ofs2 + i) (Impl.unsafe_get ar1 (ofs1 + i))
+        Impl.unsafe_set ra2.ar (ofs2 + i) (Impl.unsafe_get ra1.ar (ofs1 + i))
       done
 
   let blit ra1 ofs1 ra2 ofs2 len =
@@ -334,10 +334,10 @@ module Make (S : Strat.T) (Impl : Implementation) = struct
     done;
     !res
 
-  let fold_right f ({ ar = ar } as ra) accu =
+  let fold_right f ra accu =
     let res = ref accu in
     for i = ra.vlix downto 0 do
-      res := f (unsafe_get_ar ar i) !res
+      res := f (unsafe_get_ar ra.ar i) !res
     done;
     !res
 
