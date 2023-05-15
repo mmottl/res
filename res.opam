@@ -5,7 +5,7 @@ description:
   "RES is a library containing resizable arrays, strings, and bitvectors."
 maintainer: ["Markus Mottl <markus.mottl@gmail.com>"]
 authors: ["Markus Mottl <markus.mottl@gmail.com>"]
-license: "LGPL-2.1-or-later with OCaml-LGPL-linking-exception"
+license: "LGPL-2.1-or-later WITH OCaml-LGPL-linking-exception"
 homepage: "https://mmottl.github.io/res"
 doc: "https://mmottl.github.io/res/api"
 bug-reports: "https://github.com/mmottl/res/issues"
