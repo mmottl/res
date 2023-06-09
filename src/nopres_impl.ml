@@ -105,10 +105,10 @@ module Make (S : Strat.T) (Impl : Implementation) = struct
 
   let get_strategy ra = ra.strategy
 
-  let resizer some_lix ({ ar = ar} as ra) len =
+  let resizer some_lix ra len =
     let new_ar = creator len in
     for i = 0 to some_lix do
-      Impl.unsafe_set new_ar i (Impl.unsafe_get ar i)
+      Impl.unsafe_set new_ar i (Impl.unsafe_get ra.ar i)
     done;
     ra.ar <- new_ar
 
@@ -199,27 +199,27 @@ module Make (S : Strat.T) (Impl : Implementation) = struct
 
   let clear ra = ra.vlix <- -1; enforce_strategy ra
 
-  let unsafe_swap { ar = ar } n m =
-    let tmp = Impl.unsafe_get ar n in
-    Impl.unsafe_set ar n (Impl.unsafe_get ar m);
-    Impl.unsafe_set ar m tmp
+  let unsafe_swap ra n m =
+    let tmp = Impl.unsafe_get ra.ar n in
+    Impl.unsafe_set ra.ar n (Impl.unsafe_get ra.ar m);
+    Impl.unsafe_set ra.ar m tmp
 
   let swap ra n m =
     if n > ra.vlix || m > ra.vlix || n < 0 || m < 0 then invalid_arg "swap"
     else unsafe_swap ra n m
 
-  let unsafe_swap_in_last ({ ar = ar } as ra) n =
-    Impl.unsafe_set ar n (Impl.unsafe_get ar ra.vlix);
+  let unsafe_swap_in_last ra n =
+    Impl.unsafe_set ra.ar n (Impl.unsafe_get ra.ar ra.vlix);
     unsafe_remove_one ra
 
   let swap_in_last ra n =
     if n > ra.vlix || n < 0 then invalid_arg "swap_in_last"
     else unsafe_swap_in_last ra n
 
-  let unsafe_fill ({ ar = ar } as ra) ofs len x =
+  let unsafe_fill ra ofs len x =
     let last = ofs + len - 1 in
     maybe_grow_ix ra (max last ra.vlix);
-    for i = ofs to last do Impl.unsafe_set ar i x done
+    for i = ofs to last do Impl.unsafe_set ra.ar i x done
 
   let fill ra ofs len x =
     if ofs < 0 || len < 0 || ofs > length ra then invalid_arg "fill"
@@ -292,10 +292,10 @@ module Make (S : Strat.T) (Impl : Implementation) = struct
     done;
     !res
 
-  let fold_right f ({ ar = ar } as ra) accu =
+  let fold_right f ra accu =
     let res = ref accu in
     for i = ra.vlix downto 0 do
-      res := f (Impl.unsafe_get ar i) !res
+      res := f (Impl.unsafe_get ra.ar i) !res
     done;
     !res
 
