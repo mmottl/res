@@ -18,6 +18,5 @@
 RES is a library containing resizable arrays, strings, and bitvectors.")
   (depends
     (ocaml (>= 4.08))
-    base-bytes
   )
 )
