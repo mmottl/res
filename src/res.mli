@@ -18,7 +18,7 @@
 
 (** Global module for resizable datastructures and default implementations *)
 
-(** {6 Default strategies} *)
+(** {5 Default strategies} *)
 
 (** Default strategy for resizable datastructures *)
 module DefStrat : Strat.T with type t = float * float * int
@@ -31,7 +31,7 @@ module DefStrat : Strat.T with type t = float * float * int
 module BitDefStrat : Strat.T with type t = float * float * int
 (** Same as [DefStrat], but the minimum size is 1024 elements (bits). *)
 
-(** {6 Default instantiation of standard resizable datastructures} *)
+(** {5 Default instantiation of standard resizable datastructures} *)
 
 module Array : Pres_intf.T with module Strategy = DefStrat
 (** Resizable parameterized array using the default reallocation strategy. *)
@@ -51,7 +51,7 @@ module Weak : Weak_intf.T with module Strategy = DefStrat
 module Buffer :
   Nopres_intf.Buffer with module Strategy = DefStrat and type el = char
 
-(** {6 Functors for creating standard resizable datastructures from strategies} *)
+(** {5 Functors for creating standard resizable datastructures from strategies} *)
 
 (** Functor that creates resizable parameterized arrays from reallocation
     strategies. *)

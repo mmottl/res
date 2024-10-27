@@ -20,7 +20,7 @@
 
 (** Interface to unparameterized resizable arrays *)
 module type T = sig
-  (** {6 Signatures and types} *)
+  (** {5 Signatures and types} *)
 
   module Strategy : Strat.T
   (** Module implementing the reallocation strategy *)
@@ -34,7 +34,7 @@ module type T = sig
   type el
   (** Type of the elements in the resizable array *)
 
-  (** {6 Index and length information} *)
+  (** {5 Index and length information} *)
 
   val length : t -> int
   (** [length ra]
@@ -61,7 +61,7 @@ module type T = sig
       @return
         (real) last index of resizable array [ra] including the reserved space. *)
 
-  (** {6 Getting and setting} *)
+  (** {5 Getting and setting} *)
 
   val get : t -> int -> el
   (** [get ra n]
@@ -74,7 +74,7 @@ module type T = sig
 
       @raise Invalid_argument if index out of bounds. *)
 
-  (** {6 Creation of resizable arrays} *)
+  (** {5 Creation of resizable arrays} *)
 
   val sempty : strategy -> t
   (** [sempty s]
@@ -116,7 +116,7 @@ module type T = sig
   val init : int -> (int -> el) -> t
   (** [init n f] sames as [sinit] but uses default strategy. *)
 
-  (** {6 Strategy handling} *)
+  (** {5 Strategy handling} *)
 
   val get_strategy : t -> strategy
   (** [get_strategy ra]
@@ -135,7 +135,7 @@ module type T = sig
   (** [enforce_strategy ra] forces a reallocation if necessary (e.g. after a
       [put_strategy]). *)
 
-  (** {6 Copying, blitting and range extraction} *)
+  (** {5 Copying, blitting and range extraction} *)
 
   val copy : t -> t
   (** [copy ra]
@@ -164,7 +164,7 @@ module type T = sig
       [ofs1] and [len] do not designate a valid subarray of [ra1] or if [ofs2]
       is larger than the length of [ra2]. *)
 
-  (** {6 Combining resizable arrays} *)
+  (** {5 Combining resizable arrays} *)
 
   val append : t -> t -> t
   (** [append ra1 ra2]
@@ -180,7 +180,7 @@ module type T = sig
         a new resizable array using the default strategy and copying all
         resizable arrays in [l] in their respective order onto it. *)
 
-  (** {6 Adding and removing elements} *)
+  (** {5 Adding and removing elements} *)
 
   val add_one : t -> el -> unit
   (** [add_one ra el] adds element [el] to resizable array [ra], possibly
@@ -208,7 +208,7 @@ module type T = sig
   (** [clear ra] removes all elements from resizable array [ra], possibly
       causing a reallocation. *)
 
-  (** {6 Swapping} *)
+  (** {5 Swapping} *)
 
   val swap : t -> int -> int -> unit
   (** [swap ra n m] swaps elements at indices [n] and [m].
@@ -220,7 +220,7 @@ module type T = sig
 
       @raise Invalid_argument if index [n] is out of range. *)
 
-  (** {6 Array conversions} *)
+  (** {5 Array conversions} *)
 
   val to_array : t -> el array
   (** [to_array ra] converts a resizable array to a standard one. *)
@@ -233,7 +233,7 @@ module type T = sig
   (** [of_array ar] converts a standard array to a resizable one using the
       default strategy. *)
 
-  (** {6 List conversions} *)
+  (** {5 List conversions} *)
 
   val to_list : t -> el list
   (** [to_list ra] converts resizable array [ra] to a list. *)
@@ -246,7 +246,7 @@ module type T = sig
   (** [of_list l] creates a resizable array using the default strategy and the
       elements in list [l]. *)
 
-  (** {6 Iterators} *)
+  (** {5 Iterators} *)
 
   val iter : (el -> unit) -> t -> unit
   (** [iter f ra] applies the unit-function [f] to each element in resizable
@@ -279,7 +279,7 @@ module type T = sig
   (** [fold_right f a ra] right-folds values in resizable array [ra] using
       function [f] and start accumulator [a]. *)
 
-  (** {6 Scanning of resizable arrays} *)
+  (** {5 Scanning of resizable arrays} *)
 
   val for_all : (el -> bool) -> t -> bool
   (** [for_all p ra]
@@ -325,7 +325,7 @@ module type T = sig
         [ra], [None] otherwise. [index] is the index of the first element that
         matches. *)
 
-  (** {6 Searching of resizable arrays} *)
+  (** {5 Searching of resizable arrays} *)
 
   val find : (el -> bool) -> t -> el
   (** [find p ra]
@@ -369,7 +369,7 @@ module type T = sig
         [ra] that satisfy predicate [p], the right one only those that do not
         satisfy it. Both returned arrays are created using the strategy of [ra]. *)
 
-  (** {6 {b UNSAFE STUFF - USE WITH CAUTION!}} *)
+  (** {5 {b UNSAFE STUFF - USE WITH CAUTION!}} *)
 
   val unsafe_get : t -> int -> el
   val unsafe_set : t -> int -> el -> unit
@@ -387,7 +387,7 @@ module type Buffer = sig
   include T
   (** Includes all functions that exist in non-parameterized arrays. *)
 
-  (** {6 String conversions} *)
+  (** {5 String conversions} *)
 
   val sof_string : strategy -> string -> t
   (** [sof_string s ar] converts a string to a resizable buffer using strategy
@@ -397,7 +397,7 @@ module type Buffer = sig
   (** [of_string ar] converts a string to a resizable buffer using the default
       strategy. *)
 
-  (** {6 Functions found in the standard [Buffer]-module} *)
+  (** {5 Functions found in the standard [Buffer]-module} *)
 
   (** Note that the function [create n] ignores the parameter [n] and uses the
       default strategy instead. You can supply a different strategy with
@@ -435,7 +435,7 @@ module type Buffer = sig
   (** [output_buffer oc b] writes the current contents of buffer [b] on the
       output channel [oc]. *)
 
-  (** {6 Additional buffer functions} *)
+  (** {5 Additional buffer functions} *)
 
   val add_full_channel : t -> in_channel -> unit
   (* [add_full_channel b ic] reads the whole channel [ic] into buffer [b]. *)
