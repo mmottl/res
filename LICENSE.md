@@ -1,4 +1,4 @@
-Copyright (c) 1999- Markus Mottl <markus.mottl@gmail.com>
+Copyright © 1999- Markus Mottl <markus.mottl@gmail.com>
 
 The Library is distributed under the terms of the GNU Lesser General
 Public License version 2.1 (included below).
@@ -24,7 +24,7 @@ Version 2.1, February 1999
 
     Copyright (C) 1991, 1999 Free Software Foundation, Inc.
     51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
-    
+
     Everyone is permitted to copy and distribute verbatim copies
     of this license document, but changing it is not allowed.
 

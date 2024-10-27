@@ -1,7 +1,6 @@
 (* RES - Automatically Resizing Contiguous Memory for OCaml
 
-   Copyright (C) 1999-2002 Markus Mottl email: markus.mottl@gmail.com WWW:
-   http://www.ocaml.info
+   Copyright © 1999- Markus Mottl <markus.mottl@gmail.com>
 
    This library is free software; you can redistribute it and/or modify it under
    the terms of the GNU Lesser General Public License as published by the Free
