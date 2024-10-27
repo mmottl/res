@@ -25,24 +25,26 @@ module type T = sig
   (** Default strategy of this strategy implementation. *)
 
   val grow : t -> int -> int
-  (** [grow strat new_len] @return the new real length of some contiguous
-      datastructure using strategy [strat] given new virtual length
-      [new_len].  The user should then use this new real length to resize
-      the datastructure.
+  (** [grow strat new_len]
 
-      Be careful, the new (real) length {b must} be larger than the new
-      virtual length, otherwise your program will crash!
-  *)
+      @return
+        the new real length of some contiguous datastructure using strategy
+        [strat] given new virtual length [new_len]. The user should then use
+        this new real length to resize the datastructure.
+
+        Be careful, the new (real) length {b must} be larger than the new
+        virtual length, otherwise your program will crash! *)
 
   val shrink : t -> real_len:int -> new_len:int -> int
-  (** [shrink strat ~real_len ~new_len] @return the new real length
-      of a resizable datastructure given its current real length
-      [real_len] and its required new virtual length [new_len]
-      wrt. strategy [strat].  The user should then use this new real
-      length to resize the datastructure.  If [-1] is returned, it is
-      not necessary to resize.
+  (** [shrink strat ~real_len ~new_len]
 
-      Be careful, the new (real) length {b must} be larger than the new
-      virtual length [new_len], otherwise your program may crash!
-  *)
+      @return
+        the new real length of a resizable datastructure given its current real
+        length [real_len] and its required new virtual length [new_len] wrt.
+        strategy [strat]. The user should then use this new real length to
+        resize the datastructure. If [-1] is returned, it is not necessary to
+        resize.
+
+        Be careful, the new (real) length {b must} be larger than the new
+        virtual length [new_len], otherwise your program may crash! *)
 end
