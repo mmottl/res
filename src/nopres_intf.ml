@@ -196,7 +196,7 @@ module type T = sig
   (** [remove_n ra n] removes the last n elements of resizable array [ra],
       possibly causing a reallocation.
 
-      @raise Invalid_arg if there are not enough elements or [n < 0]. *)
+      @raise Invalid_argument if there are not enough elements or [n < 0]. *)
 
   val remove_range : t -> int -> int -> unit
   (** [remove_range ra ofs len] removes [len] elements from resizable array [ra]
