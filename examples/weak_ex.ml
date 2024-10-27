@@ -1,7 +1,7 @@
 (* Demonstrates the correct behaviour of resizable weak arrays. *)
 
 module W = Res.Weak
-module Array = W  (* allows more convenient array access *)
+module Array = W (* allows more convenient array access *)
 
 class foo = object end
 

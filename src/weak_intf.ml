@@ -1,38 +1,34 @@
-(*
-   RES - Automatically Resizing Contiguous Memory for OCaml
+(* RES - Automatically Resizing Contiguous Memory for OCaml
 
-   Copyright (C) 1999-2002  Markus Mottl
-   email: markus.mottl@gmail.com
-   WWW:   http://www.ocaml.info
+   Copyright (C) 1999-2002 Markus Mottl email: markus.mottl@gmail.com WWW:
+   http://www.ocaml.info
 
-   This library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Lesser General Public
-   License as published by the Free Software Foundation; either
-   version 2.1 of the License, or (at your option) any later version.
+   This library is free software; you can redistribute it and/or modify it under
+   the terms of the GNU Lesser General Public License as published by the Free
+   Software Foundation; either version 2.1 of the License, or (at your option)
+   any later version.
 
-   This library is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Lesser General Public License for more details.
+   This library is distributed in the hope that it will be useful, but WITHOUT
+   ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+   FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+   details.
 
-   You should have received a copy of the GNU Lesser General Public
-   License along with this library; if not, write to the Free Software
-   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
-*)
+   You should have received a copy of the GNU Lesser General Public License
+   along with this library; if not, write to the Free Software Foundation, Inc.,
+   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA *)
 
 (** Interface to weak resizable arrays *)
 module type T = sig
   (** {6 Signatures and types} *)
 
-  (** Module implementing the reallocation strategy *)
   module Strategy : Strat.T
+  (** Module implementing the reallocation strategy *)
 
-  (** Type of reallocation strategy *)
   type strategy = Strategy.t
+  (** Type of reallocation strategy *)
 
-  (** Type of parameterized resizable arrays *)
   type 'a t
-
+  (** Type of parameterized resizable arrays *)
 
   (** {6 Index and length information} *)
 
@@ -52,7 +48,6 @@ module type T = sig
   (** [real_lix ra] @return (real) last index of resizable array [ra]
       including the reserved space. *)
 
-
   (** {6 Getting, setting and checking} *)
 
   val get : 'a t -> int -> 'a option
@@ -71,7 +66,6 @@ module type T = sig
   val set : 'a t -> int -> 'a option -> unit
   (** [set ra n] sets the [n]th element of [ra].
       @raise Invalid_argument if index out of bounds. *)
-
 
   (** {6 Creation of resizable arrays} *)
 
@@ -96,7 +90,6 @@ module type T = sig
   val init : int -> (int -> 'a option) -> 'a t
   (** [init n f] sames as [sinit] but uses default strategy. *)
 
-
   (** {6 Strategy handling} *)
 
   val get_strategy : 'a t -> strategy
@@ -104,19 +97,16 @@ module type T = sig
       resizable array [ra]. *)
 
   val set_strategy : 'a t -> strategy -> unit
-  (** [set_strategy ra s] sets the reallocation strategy of
-      resizable array [ra] to [s], possibly causing an immediate
-      reallocation. *)
+  (** [set_strategy ra s] sets the reallocation strategy of resizable array [ra]
+      to [s], possibly causing an immediate reallocation. *)
 
   val put_strategy : 'a t -> strategy -> unit
-  (** [put_strategy ra s] sets the reallocation strategy of
-      resizable array [ra] to [s]. Reallocation is only done at later
-      changes in size. *)
+  (** [put_strategy ra s] sets the reallocation strategy of resizable array [ra]
+      to [s]. Reallocation is only done at later changes in size. *)
 
   val enforce_strategy : 'a t -> unit
-  (** [enforce_strategy ra] forces a reallocation if necessary
-      (e.g. after a [put_strategy]). *)
-
+  (** [enforce_strategy ra] forces a reallocation if necessary (e.g. after a
+      [put_strategy]). *)
 
   (** {6 Copying, blitting and range extraction} *)
 
@@ -132,19 +122,16 @@ module type T = sig
       subarray. *)
 
   val fill : 'a t -> int -> int -> 'a option -> unit
-  (** [fill ra ofs len el] fills resizable array [ra] from offset
-      [ofs] with [len] elements [el], possibly adding elements at the
-      end. Raises [Invalid_argument] if offset [ofs] is larger than the
-      length of the array. *)
+  (** [fill ra ofs len el] fills resizable array [ra] from offset [ofs] with
+      [len] elements [el], possibly adding elements at the end. Raises
+      [Invalid_argument] if offset [ofs] is larger than the length of the array. *)
 
   val blit : 'a t -> int -> 'a t -> int -> int -> unit
-  (** [blit ra1 ofs1 ra2 ofs2 len] blits resizable array [ra1] onto
-      [ra2] reading [len] elements from offset [ofs1] and writing them
-      to [ofs2], possibly adding elements at the end of ra2. Raises
-      [Invalid_argument] if [ofs1] and [len] do not designate a valid
-      subarray of [ra1] or if [ofs2] is larger than the length of
-      [ra2]. *)
-
+  (** [blit ra1 ofs1 ra2 ofs2 len] blits resizable array [ra1] onto [ra2]
+      reading [len] elements from offset [ofs1] and writing them to [ofs2],
+      possibly adding elements at the end of ra2. Raises [Invalid_argument] if
+      [ofs1] and [len] do not designate a valid subarray of [ra1] or if [ofs2]
+      is larger than the length of [ra2]. *)
 
   (** {6 Combining resizable arrays} *)
 
@@ -158,33 +145,30 @@ module type T = sig
       strategy and copying all resizable arrays in [l] in their respective
       order onto it. *)
 
-
   (** {6 Adding and removing elements} *)
 
   val add_one : 'a t -> 'a option -> unit
-  (** [add_one ra el] adds element [el] to resizable array [ra],
-      possibly causing a reallocation. *)
+  (** [add_one ra el] adds element [el] to resizable array [ra], possibly
+      causing a reallocation. *)
 
   val remove_one : 'a t -> unit
-  (** [remove_one ra] removes the last element of resizable array
-      [ra], possibly causing a reallocation.
+  (** [remove_one ra] removes the last element of resizable array [ra], possibly
+      causing a reallocation.
       @raise Failure if the array is empty. *)
 
   val remove_n : 'a t -> int -> unit
-  (** [remove_n ra n] removes the last n elements of resizable
-      array [ra], possibly causing a reallocation.
+  (** [remove_n ra n] removes the last n elements of resizable array [ra],
+      possibly causing a reallocation.
       @raise Invalid_arg if there are not enough elements or [n < 0]. *)
 
   val remove_range : 'a t -> int -> int -> unit
-  (** [remove_range ra ofs len] removes [len] elements from resizable
-      array [ra] starting at [ofs] and possibly causing a
-      reallocation.
+  (** [remove_range ra ofs len] removes [len] elements from resizable array [ra]
+      starting at [ofs] and possibly causing a reallocation.
       @raise Invalid_argument if range is invalid. *)
 
   val clear : 'a t -> unit
-  (** [clear ra] removes all elements from resizable array [ra],
-      possibly causing a reallocation. *)
-
+  (** [clear ra] removes all elements from resizable array [ra], possibly
+      causing a reallocation. *)
 
   (** {6 Swapping} *)
 
@@ -193,10 +177,8 @@ module type T = sig
       @raise Invalid_argument if any index is out of range. *)
 
   val swap_in_last : 'a t -> int -> unit
-  (** [swap_in_last ra n] swaps the last element with the one at
-      position [n].
+  (** [swap_in_last ra n] swaps the last element with the one at position [n].
       @raise Invalid_argument if index [n] is out of range. *)
-
 
   (** {6 Standard conversions} *)
 
@@ -204,13 +186,12 @@ module type T = sig
   (** [to_std ra] converts a resizable weak array to a standard one. *)
 
   val sof_std : strategy -> 'a Weak.t -> 'a t
-  (** [sof_std s ar] converts a standard weak array to a resizable
-      one, using strategy [s]. *)
+  (** [sof_std s ar] converts a standard weak array to a resizable one, using
+      strategy [s]. *)
 
   val of_std : 'a Weak.t -> 'a t
-  (** [of_std ar] converts a standard weak array to a resizable one
-      using the default strategy. *)
-
+  (** [of_std ar] converts a standard weak array to a resizable one using the
+      default strategy. *)
 
   (** {6 List conversions} *)
 
@@ -218,28 +199,26 @@ module type T = sig
   (** [to_list ra] converts resizable array [ra] to a list. *)
 
   val of_list : 'a option list -> 'a t
-  (** [of_list l] creates a resizable array using the default
-      strategy and the elements in list [l]. *)
-
+  (** [of_list l] creates a resizable array using the default strategy and the
+      elements in list [l]. *)
 
   (** {6 Iterators} *)
 
   val iter : ('a option -> unit) -> 'a t -> unit
-  (** [iter f ra] applies the unit-function [f] to each element in
-      resizable array [ra]. *)
+  (** [iter f ra] applies the unit-function [f] to each element in resizable
+      array [ra]. *)
 
   val iteri : (int -> 'a option -> unit) -> 'a t -> unit
-  (** [iteri f ra] applies the unit-function [f] to each index and
-      element in resizable array [ra]. *)
+  (** [iteri f ra] applies the unit-function [f] to each index and element in
+      resizable array [ra]. *)
 
   val fold_left : ('b -> 'a option -> 'b) -> 'b -> 'a t -> 'b
-  (** [fold_left f a ra] left-folds values in resizable array [ra]
-      using function [f] and start accumulator [a]. *)
+  (** [fold_left f a ra] left-folds values in resizable array [ra] using
+      function [f] and start accumulator [a]. *)
 
   val fold_right : ('a option -> 'b -> 'b) -> 'a t -> 'b -> 'b
-  (** [fold_right f a ra] right-folds values in resizable array [ra]
-      using function [f] and start accumulator [a]. *)
-
+  (** [fold_right f a ra] right-folds values in resizable array [ra] using
+      function [f] and start accumulator [a]. *)
 
   (** {6 Scanning of resizable arrays} *)
 
@@ -269,7 +248,6 @@ module type T = sig
   (** [posq el ra] @return [Some index] if [el] is physically
       equal to the element at [index] in [ra], [None] otherwise.  [index]
       is the index of the first element that matches. *)
-
 
   (** {6 Searching of resizable arrays} *)
 
@@ -303,20 +281,15 @@ module type T = sig
       [p], the right one only those that do not satisfy it. Both returned
       arrays are created using the strategy of [ra]. *)
 
-
   (** {6 {b UNSAFE STUFF - USE WITH CAUTION!}} *)
 
   val unsafe_get : 'a t -> int -> 'a option
   val unsafe_set : 'a t -> int -> 'a option -> unit
-
   val unsafe_sub : 'a t -> int -> int -> 'a t
-
   val unsafe_fill : 'a t -> int -> int -> 'a option -> unit
   val unsafe_blit : 'a t -> int -> 'a t -> int -> int -> unit
-
   val unsafe_remove_one : 'a t -> unit
   val unsafe_remove_n : 'a t -> int -> unit
-
   val unsafe_swap : 'a t -> int -> int -> unit
   val unsafe_swap_in_last : 'a t -> int -> unit
 end

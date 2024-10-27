@@ -1,1 +1,2 @@
-(library (public_name res))
+(library
+ (public_name res))

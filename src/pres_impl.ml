@@ -1,27 +1,25 @@
-(*
-   RES - Automatically Resizing Contiguous Memory for OCaml
+(* RES - Automatically Resizing Contiguous Memory for OCaml
 
-   Copyright (C) 1999-  Markus Mottl
-   email: markus.mottl@gmail.com
-   WWW:   http://www.ocaml.info
+   Copyright (C) 1999- Markus Mottl email: markus.mottl@gmail.com WWW:
+   http://www.ocaml.info
 
-   This library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Lesser General Public
-   License as published by the Free Software Foundation; either
-   version 2.1 of the License, or (at your option) any later version.
+   This library is free software; you can redistribute it and/or modify it under
+   the terms of the GNU Lesser General Public License as published by the Free
+   Software Foundation; either version 2.1 of the License, or (at your option)
+   any later version.
 
-   This library is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Lesser General Public License for more details.
+   This library is distributed in the hope that it will be useful, but WITHOUT
+   ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+   FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+   details.
 
-   You should have received a copy of the GNU Lesser General Public
-   License along with this library; if not, write to the Free Software
-   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
-*)
+   You should have received a copy of the GNU Lesser General Public License
+   along with this library; if not, write to the Free Software Foundation, Inc.,
+   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA *)
 
 module type Implementation = sig
   type 'a t
+
   val name : string
   val length : 'a t -> int
   val make : int -> 'a -> 'a t
@@ -37,17 +35,14 @@ module Make (S : Strat.T) (Impl : Implementation) = struct
   type 'a t = {
     mutable ar : 'a option Impl.t;
     mutable vlix : int;
-    mutable strategy : strategy
+    mutable strategy : strategy;
   }
 
   let name = Impl.name
-
   let invalid_arg str = invalid_arg (name ^ "." ^ str)
   let failwith str = failwith (name ^ "." ^ str)
-
   let length ra = ra.vlix + 1
   let lix ra = ra.vlix
-
   let real_length ra = Impl.length ra.ar
   let real_lix ra = real_length ra - 1
 
@@ -57,22 +52,19 @@ module Make (S : Strat.T) (Impl : Implementation) = struct
     | Some el -> el
 
   let unsafe_get ra ix = unsafe_get_ar ra.ar ix
-
   let unsafe_set_ar ar ix el = Impl.unsafe_set ar ix (Some el)
   let unsafe_set ra ix el = unsafe_set_ar ra.ar ix el
 
   let get ra n =
-    if n > ra.vlix || n < 0 then invalid_arg "get"
-    else unsafe_get ra n
+    if n > ra.vlix || n < 0 then invalid_arg "get" else unsafe_get ra n
 
   let set ra n el =
-    if n > ra.vlix || n < 0 then invalid_arg "set"
-    else unsafe_set ra n el
+    if n > ra.vlix || n < 0 then invalid_arg "set" else unsafe_set ra n el
 
   let creator n = Impl.make n None
 
   let screate_fresh strategy n =
-    let res = { ar = creator 0; vlix = n - 1; strategy = strategy } in
+    let res = { ar = creator 0; vlix = n - 1; strategy } in
     res.ar <- creator (Strategy.grow strategy n);
     res
 
@@ -82,7 +74,7 @@ module Make (S : Strat.T) (Impl : Implementation) = struct
     { ar = creator (length ra); vlix = ra.vlix; strategy = ra.strategy }
 
   let sempty strategy =
-    let res = { ar = creator 0; vlix = -1; strategy = strategy } in
+    let res = { ar = creator 0; vlix = -1; strategy } in
     res.ar <- creator (Strategy.grow strategy 0);
     res
 
@@ -92,31 +84,32 @@ module Make (S : Strat.T) (Impl : Implementation) = struct
     let res = screate_fresh strategy n in
     let res_ar = res.ar in
     let el = Some x in
-    for i = 0 to n - 1 do Impl.unsafe_set res_ar i el done;
+    for i = 0 to n - 1 do
+      Impl.unsafe_set res_ar i el
+    done;
     res
 
   let smake = screate
-
   let create n = smake Strategy.default n
-
   let make = create
 
   let sinit strategy n f =
     let res = screate_fresh strategy n in
     let res_ar = res.ar in
-    for i = 0 to n - 1 do unsafe_set_ar res_ar i (f i) done;
+    for i = 0 to n - 1 do
+      unsafe_set_ar res_ar i (f i)
+    done;
     res
 
   let init n f = sinit Strategy.default n f
 
-  let to_array ({ ar = ar } as ra) =
+  let to_array ({ ar } as ra) =
     Array.init (length ra) (fun i -> unsafe_get_ar ar i)
 
   let sof_array strategy ar =
     sinit strategy (Array.length ar) (fun i -> Array.unsafe_get ar i)
 
   let of_array ar = sof_array Strategy.default ar
-
   let get_strategy ra = ra.strategy
 
   let resizer some_lix ra len =
@@ -133,7 +126,10 @@ module Make (S : Strat.T) (Impl : Implementation) = struct
     let new_real_len = Strategy.shrink ra.strategy ~real_len ~new_len in
     if new_real_len <> -1 then resizer ra.vlix ra new_real_len
 
-  let set_strategy ra strategy = ra.strategy <- strategy; enforce_strategy ra
+  let set_strategy ra strategy =
+    ra.strategy <- strategy;
+    enforce_strategy ra
+
   let put_strategy ra strategy = ra.strategy <- strategy
 
   let make_matrix sx sy init =
@@ -144,7 +140,7 @@ module Make (S : Strat.T) (Impl : Implementation) = struct
     done;
     res
 
-  let copy ({ ar = ar } as ra) =
+  let copy ({ ar } as ra) =
     let new_ar = Impl.make (real_length ra) (Impl.unsafe_get ar 0) in
     for i = 1 to real_lix ra do
       Impl.unsafe_set new_ar i (Impl.unsafe_get ar i)
@@ -158,7 +154,7 @@ module Make (S : Strat.T) (Impl : Implementation) = struct
     done
 
   let append ra1 ra2 =
-    match ra1.vlix, ra2.vlix with
+    match (ra1.vlix, ra2.vlix) with
     | -1, -1 -> empty ()
     | _, -1 -> copy ra1
     | -1, _ -> copy ra2
@@ -172,7 +168,7 @@ module Make (S : Strat.T) (Impl : Implementation) = struct
 
   let rec concat_aux res offset = function
     | [] -> res
-    | h::t ->
+    | h :: t ->
         if h.vlix < 0 then concat_aux res offset t
         else
           let len = length h in
@@ -181,8 +177,7 @@ module Make (S : Strat.T) (Impl : Implementation) = struct
 
   let concat l =
     let len = List.fold_left (fun a el -> a + length el) 0 l in
-    if len = 0 then empty ()
-    else concat_aux (create_fresh len) 0 l
+    if len = 0 then empty () else concat_aux (create_fresh len) 0 l
 
   let unsafe_sub ra ofs len =
     let res = create_fresh len in
@@ -197,7 +192,9 @@ module Make (S : Strat.T) (Impl : Implementation) = struct
     if real_lix ra < ix then
       resizer ra.vlix ra (Strategy.grow ra.strategy (ix + 1))
 
-  let maybe_grow_ix ra new_lix = guarantee_ix ra new_lix; ra.vlix <- new_lix
+  let maybe_grow_ix ra new_lix =
+    guarantee_ix ra new_lix;
+    ra.vlix <- new_lix
 
   let add_one ra x =
     let n = length ra in
@@ -210,8 +207,7 @@ module Make (S : Strat.T) (Impl : Implementation) = struct
     enforce_strategy ra
 
   let remove_one ra =
-    if ra.vlix < 0 then failwith "remove_one"
-    else unsafe_remove_one ra
+    if ra.vlix < 0 then failwith "remove_one" else unsafe_remove_one ra
 
   let unsafe_remove_n ra n =
     let old_vlix = ra.vlix in
@@ -261,7 +257,9 @@ module Make (S : Strat.T) (Impl : Implementation) = struct
     maybe_grow_ix ra (max last ra.vlix);
     let el = Some x in
     let ar = ra.ar in
-    for i = ofs to last do Impl.unsafe_set ar i el done
+    for i = ofs to last do
+      Impl.unsafe_set ar i el
+    done
 
   let fill ra ofs len x =
     if ofs < 0 || len < 0 || ofs > length ra then invalid_arg "fill"
@@ -281,19 +279,19 @@ module Make (S : Strat.T) (Impl : Implementation) = struct
   let blit ra1 ofs1 ra2 ofs2 len =
     if
       len < 0 || ofs1 < 0 || ofs2 < 0
-      || ofs1 + len > length ra1 || ofs2 > length ra2
+      || ofs1 + len > length ra1
+      || ofs2 > length ra2
     then invalid_arg "blit"
     else unsafe_blit ra1 ofs1 ra2 ofs2 len
 
   let rec to_list_aux ar i accu =
-    if i < 0 then accu
-    else to_list_aux ar (i - 1) (unsafe_get_ar ar i :: accu)
+    if i < 0 then accu else to_list_aux ar (i - 1) (unsafe_get_ar ar i :: accu)
 
   let to_list ra = to_list_aux ra.ar ra.vlix []
 
   let rec of_list_aux res_ar i = function
     | [] -> ()
-    | h::t ->
+    | h :: t ->
         unsafe_set_ar res_ar i h;
         of_list_aux res_ar (i + 1) t
 
@@ -307,27 +305,31 @@ module Make (S : Strat.T) (Impl : Implementation) = struct
     of_list_aux res.ar 0 l;
     res
 
-  let iter f ({ ar = ar } as ra) =
-    for i = 0 to ra.vlix do f (unsafe_get_ar ar i) done
+  let iter f ({ ar } as ra) =
+    for i = 0 to ra.vlix do
+      f (unsafe_get_ar ar i)
+    done
 
-  let map f ({ ar = ar } as ra) =
-    let { ar = res_ar } as res = create_from ra in
+  let map f ({ ar } as ra) =
+    let ({ ar = res_ar } as res) = create_from ra in
     for i = 0 to res.vlix do
       unsafe_set_ar res_ar i (f (unsafe_get_ar ar i))
     done;
     res
 
-  let iteri f ({ ar = ar } as ra) =
-    for i = 0 to ra.vlix do f i (unsafe_get_ar ar i) done
+  let iteri f ({ ar } as ra) =
+    for i = 0 to ra.vlix do
+      f i (unsafe_get_ar ar i)
+    done
 
-  let mapi f ({ ar = ar } as ra) =
-    let { ar = res_ar } as res = create_from ra in
+  let mapi f ({ ar } as ra) =
+    let ({ ar = res_ar } as res) = create_from ra in
     for i = 0 to res.vlix do
       unsafe_set_ar res_ar i (f i (unsafe_get_ar ar i))
     done;
     res
 
-  let fold_left f accu ({ ar = ar } as ra) =
+  let fold_left f accu ({ ar } as ra) =
     let res = ref accu in
     for i = 0 to ra.vlix do
       res := f !res (unsafe_get_ar ar i)
@@ -342,7 +344,7 @@ module Make (S : Strat.T) (Impl : Implementation) = struct
     !res
 
   let rec for_all_aux i p ra =
-    i > ra.vlix || p (unsafe_get ra i) && for_all_aux (i + 1) p ra
+    i > ra.vlix || (p (unsafe_get ra i) && for_all_aux (i + 1) p ra)
 
   let for_all p ra = for_all_aux 0 p ra
 
@@ -379,8 +381,7 @@ module Make (S : Strat.T) (Impl : Implementation) = struct
     if i > ra.vlix then raise Not_found
     else
       let el = unsafe_get ra i in
-      if p el then el
-      else find_aux (i + 1) p ra
+      if p el then el else find_aux (i + 1) p ra
 
   let find p ra = find_aux 0 p ra
 
@@ -390,10 +391,9 @@ module Make (S : Strat.T) (Impl : Implementation) = struct
     else find_index_aux p ra (i + 1)
 
   let find_index p ra i =
-    if i < 0 then invalid_arg "find_index"
-    else find_index_aux p ra i
+    if i < 0 then invalid_arg "find_index" else find_index_aux p ra i
 
-  let filter p ({ ar = ar } as ra) =
+  let filter p ({ ar } as ra) =
     let res = sempty ra.strategy in
     for i = 0 to ra.vlix do
       let el = unsafe_get_ar ar i in
@@ -403,25 +403,23 @@ module Make (S : Strat.T) (Impl : Implementation) = struct
 
   let find_all = filter
 
-  let filter_in_place p ({ ar = ar } as ra) =
+  let filter_in_place p ({ ar } as ra) =
     let dest = ref 0 in
     let pos = ref 0 in
     while !pos <= ra.vlix do
       let el = unsafe_get_ar ar !pos in
-      if p el then begin
+      if p el then (
         unsafe_set_ar ar !dest el;
-        incr dest
-      end;
+        incr dest);
       incr pos
     done;
     unsafe_remove_n ra (!pos - !dest)
 
-  let partition p ({ ar = ar } as ra) =
-    let res1, res2 as res = sempty ra.strategy, sempty ra.strategy in
+  let partition p ({ ar } as ra) =
+    let ((res1, res2) as res) = (sempty ra.strategy, sempty ra.strategy) in
     for i = 0 to ra.vlix do
       let el = unsafe_get_ar ar i in
-      if p el then add_one res1 el
-      else add_one res2 el
+      if p el then add_one res1 el else add_one res2 el
     done;
     res
 end
