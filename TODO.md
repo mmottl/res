@@ -1,2 +1,4 @@
-  * Extend the functionality of bit-vectors with efficient functions for e.g.
-    "land", "lor", etc...
+# To-do
+
+- Extend the functionality of bit-vectors with efficient functions for e.g.
+  "land", "lor", etc...
