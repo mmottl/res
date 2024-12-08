@@ -1,76 +1,76 @@
-## RES - Automatically Resizing Contiguous Memory for OCaml
+# RES - Automatically Resizing Contiguous Memory for OCaml
 
-### What is RES?
+## What is RES?
 
 This OCaml-library consists of a set of modules which implement automatically
 resizing (= reallocating) data structures that consume a contiguous part
-of memory.  This allows appending and removing of elements to/from arrays
+of memory. This allows appending and removing of elements to/from arrays
 (both boxed and unboxed), strings (buffers), bit strings and weak arrays
 while still maintaining fast constant-time access to elements.
 
 There are also functors that allow the generation of similar modules which
 use different reallocation strategies.
 
-### Features
+## Features
 
-  * Fast constant-time access to indexed elements (e.g. in arrays and
-    strings) is often a prerequisite for short execution times of programs.
+- Fast constant-time access to indexed elements (e.g. in arrays and
+  strings) is often a prerequisite for short execution times of programs.
 
-    Still, operations like adding and/or removing elements to/from the
-    end of such data structures are often needed.  Unfortunately, having
-    both properties at the same time sometimes requires reallocating this
-    contiguous part of memory.
+  Still, operations like adding and/or removing elements to/from the
+  end of such data structures are often needed. Unfortunately, having
+  both properties at the same time sometimes requires reallocating this
+  contiguous part of memory.
 
-    This module does not eliminate this problem, but hides the process of
-    reallocation from the user, i.e. it happens automatically.
+  This module does not eliminate this problem, but hides the process of
+  reallocation from the user, i.e. it happens automatically.
 
-    Thus, the user is liberated from this bug-attracting (e.g. index errors)
-    task.
+  Thus, the user is liberated from this bug-attracting (e.g. index errors)
+  task.
 
-  * This library allows the user to parameterize allocation strategies at
-    runtime.  This is an important feature, because it is impossible for
-    any allocation algorithm to perform optimally without having knowledge
-    about the user program.
+- This library allows the user to parameterize allocation strategies at
+  runtime. This is an important feature, because it is impossible for
+  any allocation algorithm to perform optimally without having knowledge
+  about the user program.
 
-    For example, the programmer might know that a consecutive series of
-    operations will alternately add and remove large batches of elements.
-    In such a case it would be wise to keep a high reserve of available slots
-    in the data structure, because otherwise it will resize very often during
-    this procedure which requires a significant amount of time.
+  For example, the programmer might know that a consecutive series of
+  operations will alternately add and remove large batches of elements.
+  In such a case it would be wise to keep a high reserve of available slots
+  in the data structure, because otherwise it will resize very often during
+  this procedure which requires a significant amount of time.
 
-    By raising a corresponding threshold in appropriate places at runtime,
-    programmers can fine-tune the behavior of e.g. their buffers for optimal
-    performance and set this parameter back later to save memory.
+  By raising a corresponding threshold in appropriate places at runtime,
+  programmers can fine-tune the behavior of e.g. their buffers for optimal
+  performance and set this parameter back later to save memory.
 
-  * Because optimal reallocation strategies may be quite complex,
-    it was also a design goal to have users supply their own ones (if
-    required).
+- Because optimal reallocation strategies may be quite complex,
+  it was also a design goal to have users supply their own ones (if
+  required).
 
-    By using functors users can parameterize these data structures with
-    their own reallocation strategies, giving them even more control over
-    how and when reallocations are triggered.
+  By using functors users can parameterize these data structures with
+  their own reallocation strategies, giving them even more control over
+  how and when reallocations are triggered.
 
-  * Users may want to add support for additional low-level implementations
-    that require reallocations.  In this case, too, it is fairly easy to
-    create new modules by using functors.
+- Users may want to add support for additional low-level implementations
+  that require reallocations. In this case, too, it is fairly easy to
+  create new modules by using functors.
 
-  * The library implements a large interface of functions, all of which
-    are completely independent of the reallocation strategy and the low-level
-    implementation.
+- The library implements a large interface of functions, all of which
+  are completely independent of the reallocation strategy and the low-level
+  implementation.
 
-    All the interfaces of the corresponding low-level implementations of
-    data structures (e.g. array, string) are fully supported and have been
-    extended with further functionality.  There is even a new buffer module
-    which can be used in every context of the standard one.
+  All the interfaces of the corresponding low-level implementations of
+  data structures (e.g. array, string) are fully supported and have been
+  extended with further functionality. There is even a new buffer module
+  which can be used in every context of the standard one.
 
-  * OCaml makes a distinction between unboxed and boxed arrays.  If the type
-    of an array is `float`, the representation will be unboxed in cases in
-    which the array is not used in a polymorphic context (native code only).
+- OCaml makes a distinction between unboxed and boxed arrays. If the type
+  of an array is `float`, the representation will be unboxed in cases in
+  which the array is not used in a polymorphic context (native code only).
 
-    To benefit from these much faster representations there are specialized
-    versions of automatically resizing arrays in the distribution.
+  To benefit from these much faster representations there are specialized
+  versions of automatically resizing arrays in the distribution.
 
-### Usage
+## Usage
 
 The API is fully documented and can be built as HTML using `make doc`.
 It is also available [online](http://mmottl.github.io/res/api/res).
@@ -87,16 +87,16 @@ Their function interface, however, is documented in files `lib/pres_intf.ml`
 `lib/nopres_intf.ml` (for non-parameterized "low-level" types like e.g. float
 arrays, strings (buffers), etc.).
 
-#### Convenience
+## Convenience
 
 It should be noted that it is possible to use the standard notation for
 accessing elements (e.g. `ar.(42)`) with resizable arrays (and even with
-`Buffer`, `Bits`, etc...).  This requires a short explanation of how OCaml
+`Buffer`, `Bits`, etc...). This requires a short explanation of how OCaml
 treats such syntactic sugar:
 
 All that OCaml does is that it replaces such syntax with an appropriate
-`Array.get` or `Array.set`.  This may be _any_ module that happens to be
-bound to this name in the current scope.  The same principle is true for the
+`Array.get` or `Array.set`. This may be _any_ module that happens to be
+bound to this name in the current scope. The same principle is true for the
 `String`-module and the `.[]`-operator.
 
 Thus, the following works:
@@ -115,7 +115,7 @@ let () =
   print_newline ()
 ```
 
-Do not forget that it is even possible to bind modules locally.  Example:
+Do not forget that it is even possible to bind modules locally. Example:
 
 ```ocaml
 let () =
@@ -171,16 +171,16 @@ let ar = Array.of_array [| 1; 2; 3; 4 |] in
 ```
 
 This should allow all of your sources to compile out-of-the-box with the
-additional functionality.  In places where you still need the standard
+additional functionality. In places where you still need the standard
 implementation you should have no problems to use the rebound module
 and type to do so.
 
-This trick works similarly for the old and the new Buffer-module.  You might
-also want to replace the `String`-module in this fashion.  The latter one,
+This trick works similarly for the old and the new Buffer-module. You might
+also want to replace the `String`-module in this fashion. The latter one,
 however, supports a number of functions like e.g. `escape`, which are not
 available then.
 
-### Contact Information and Contributing
+## Contact Information and Contributing
 
 Please submit bugs reports, feature requests, contributions and similar to
 the [GitHub issue tracker](https://github.com/mmottl/res/issues).
