@@ -35,7 +35,8 @@ module type T = sig
   (** [length ra]
 
       @return
-        (virtual) length of resizable array [ra] excluding the reserved space. *)
+        (virtual) length of resizable array [ra] excluding the reserved space.
+  *)
 
   val lix : 'a t -> int
   (** [lix ra]
@@ -54,7 +55,8 @@ module type T = sig
   (** [real_lix ra]
 
       @return
-        (real) last index of resizable array [ra] including the reserved space. *)
+        (real) last index of resizable array [ra] including the reserved space.
+  *)
 
   (** {5 Getting, setting and checking} *)
 
@@ -133,7 +135,8 @@ module type T = sig
   (** [copy ra]
 
       @return
-        a copy of resizable array [ra]. The two arrays share the same strategy! *)
+        a copy of resizable array [ra]. The two arrays share the same strategy!
+  *)
 
   val sub : 'a t -> int -> int -> 'a t
   (** [sub ra ofs len]
@@ -147,7 +150,8 @@ module type T = sig
   val fill : 'a t -> int -> int -> 'a option -> unit
   (** [fill ra ofs len el] fills resizable array [ra] from offset [ofs] with
       [len] elements [el], possibly adding elements at the end. Raises
-      [Invalid_argument] if offset [ofs] is larger than the length of the array. *)
+      [Invalid_argument] if offset [ofs] is larger than the length of the array.
+  *)
 
   val blit : 'a t -> int -> 'a t -> int -> int -> unit
   (** [blit ra1 ofs1 ra2 ofs2 len] blits resizable array [ra1] onto [ra2]
@@ -340,7 +344,8 @@ module type T = sig
       @return
         a pair of resizable arrays, the left part containing only elements of
         [ra] that satisfy predicate [p], the right one only those that do not
-        satisfy it. Both returned arrays are created using the strategy of [ra]. *)
+        satisfy it. Both returned arrays are created using the strategy of [ra].
+  *)
 
   (** {5 {b UNSAFE STUFF - USE WITH CAUTION!}} *)
 

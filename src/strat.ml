@@ -32,8 +32,8 @@ module type T = sig
         [strat] given new virtual length [new_len]. The user should then use
         this new real length to resize the datastructure.
 
-        Be careful, the new (real) length {b must} be larger than the new
-        virtual length, otherwise your program will crash! *)
+      Be careful, the new (real) length {b must} be larger than the new virtual
+      length, otherwise your program will crash! *)
 
   val shrink : t -> real_len:int -> new_len:int -> int
   (** [shrink strat ~real_len ~new_len]
@@ -45,6 +45,6 @@ module type T = sig
         resize the datastructure. If [-1] is returned, it is not necessary to
         resize.
 
-        Be careful, the new (real) length {b must} be larger than the new
-        virtual length [new_len], otherwise your program may crash! *)
+      Be careful, the new (real) length {b must} be larger than the new virtual
+      length [new_len], otherwise your program may crash! *)
 end

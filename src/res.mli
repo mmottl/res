@@ -51,7 +51,8 @@ module Weak : Weak_intf.T with module Strategy = DefStrat
 module Buffer :
   Nopres_intf.Buffer with module Strategy = DefStrat and type el = char
 
-(** {5 Functors for creating standard resizable datastructures from strategies} *)
+(** {5 Functors for creating standard resizable datastructures from strategies}
+*)
 
 (** Functor that creates resizable parameterized arrays from reallocation
     strategies. *)
