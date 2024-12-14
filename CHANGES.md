@@ -1,3 +1,5 @@
+# Changelog
+
 ## 5.0.2 (2024-10-27)
 
 - Switched to OPAM file generation via `dune-project`.
