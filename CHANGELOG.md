@@ -1,26 +1,36 @@
 # Changelog
 
-## 5.0.2 (2024-10-27)
+## [5.0.2] - 2024-10-27
+
+### Added
+
+- GitHub workflow for CI.
+
+### Changed
 
 - Switched to OPAM file generation via `dune-project`.
-
 - Used packed float array implementation for resizable float arrays.
+- Used ocamlformat to format code and fixed OCaml doc problems.
 
-- Removed `bytes` dependency (thanks to Marek Kubica).
+### Fixed
 
 - Fixed closure allocation due to match on mutable (thanks to Luke Palmer).
 
-- Used ocamlformat to format code, and fixed OCaml doc problems.
+### Removed
 
-- Added GitHub workflow for CI.
+- Removed `bytes` dependency (thanks to Marek Kubica).
 
-## 5.0.1 (2018-10-25)
+## [5.0.1] - 2018-10-25
 
-- Switched to dune, dune-release, and OPAM 2.0
+### Changed
 
-## 5.0.0 (2017-08-02)
+- Switched to dune, dune-release, and OPAM 2.0.
 
-- Switched to jbuilder and topkg
+## [5.0.0] - 2017-08-02
+
+### Changed
+
+- Switched to jbuilder and topkg.
 
 ## Changes Before Version 5.0.0
 
